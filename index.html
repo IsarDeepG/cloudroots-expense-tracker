@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CloudRoots Expense Tracker · Apr 2025 – Now</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: #f5f7fa; color: #1a1a2e; }
+header { background: #0f3460; color: white; padding: 1.5rem 2rem; }
+h1 { margin: 0; font-size: 1.8rem; }
+.container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.card { background: white; border-radius: 12px; padding: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.card h3 { margin: 0 0 0.5rem; font-size: 0.85rem; color: #666; text-transform: uppercase; }
+.card .value { font-size: 1.6rem; font-weight: 700; color: #0f3460; }
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+.chart-box { background: white; border-radius: 12px; padding: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+th { background: #0f3460; color: white; }
+tr:hover { background: #f0f4ff; }
+.note { background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; border-radius: 8px; margin-top: 2rem; }
+@media (max-width: 800px) { .charts { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>CloudRoots Expense Tracker</h1>
+  <p style="margin:0.5rem 0 0; opacity:0.9;">1 April 2025 – 14 October 2026 · All accounts from email statements</p>
+</header>
+<div class="container">
+  <div class="cards">
+    <div class="card"><h3>Airtel Black (total)</h3><div class="value">₹68,800+</div></div>
+    <div class="card"><h3>SC Account outflows</h3><div class="value">₹2,28,458</div></div>
+    <div class="card"><h3>SC Account inflows</h3><div class="value">₹1,19,979</div></div>
+    <div class="card"><h3>SBI statements found</h3><div class="value">15+ months</div></div>
+  </div>
+
+  <div class="charts">
+    <div class="chart-box"><canvas id="airtelChart"></canvas></div>
+    <div class="chart-box"><canvas id="scChart"></canvas></div>
+  </div>
+
+  <h2>Recurring bills &amp; repeated payments</h2>
+  <table>
+    <thead><tr><th>Payee</th><th>Frequency</th><th>Typical amount</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Airtel Black</td><td>Monthly</td><td>₹3,700–3,900</td><td>Account 10101017262802</td></tr>
+      <tr><td>Slack (3 users)</td><td>Monthly</td><td>₹884</td><td>Workspace plan</td></tr>
+      <tr><td>DLF Jasola DTJ010</td><td>Monthly</td><td>₹10k–14k</td><td>Maintenance + electricity</td></tr>
+      <tr><td>Eleven Labs</td><td>Recurring</td><td>—</td><td>Receipts seen Oct 2026</td></tr>
+      <tr><td>IGL Gas</td><td>Recurring</td><td>—</td><td>BP 5000004664</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Key tracked expenses (Airtel + SC)</h2>
+  <table>
+    <thead>
+      <tr><th>Month</th><th>Airtel Black</th><th>SC Account notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Apr 2025</td><td>₹3,682</td><td>SC eStatement available</td></tr>
+      <tr><td>May 2025</td><td>₹3,372</td><td>Deposit ₹74,800 (Makkajai); UPI out</td></tr>
+      <tr><td>Jun 2025</td><td>₹3,729</td><td>Large UPI transfers to self (~₹1.83L)</td></tr>
+      <tr><td>Jul 2025</td><td>₹3,704</td><td>UPI out ₹45,344</td></tr>
+      <tr><td>Aug 2025</td><td>₹3,723</td><td>SC eStatement available</td></tr>
+      <tr><td>Sep 2025</td><td>₹3,797</td><td>SC eStatement available</td></tr>
+      <tr><td>Oct 2025</td><td>₹3,834</td><td>SC eStatement available</td></tr>
+      <tr><td>Nov 2025</td><td>₹3,850</td><td>SC eStatement available</td></tr>
+      <tr><td>Dec 2025</td><td>₹3,844</td><td>SC eStatement available</td></tr>
+      <tr><td>Jan 2026</td><td>₹3,848</td><td>SC eStatement available</td></tr>
+      <tr><td>Feb 2026</td><td>₹3,836</td><td>SC eStatement available</td></tr>
+      <tr><td>Mar 2026</td><td>₹3,827</td><td>SC eStatement available</td></tr>
+      <tr><td>Apr 2026</td><td>₹3,525</td><td>SC eStatement available</td></tr>
+      <tr><td>May 2026</td><td>₹3,785</td><td>Account closed 12 May (final UPI ₹14)</td></tr>
+      <tr><td>Jun 2026</td><td>₹3,840</td><td>—</td></tr>
+      <tr><td>Jul 2026</td><td>₹3,840</td><td>—</td></tr>
+      <tr><td>Aug 2026</td><td>₹3,833</td><td>—</td></tr>
+      <tr><td>Sep 2026</td><td>₹3,848</td><td>—</td></tr>
+      <tr><td>Oct 2026</td><td>₹3,898</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <strong>Coverage from 1 Apr 2025:</strong><br>
+    • <b>SBI</b> e-statements present every month (May 2025–Jul 2026). Password-protected (last 5 digits of registered mobile + DOB DDMMYY). Provide the password or unlocked PDFs/CSVs to parse full transactions.<br>
+    • <b>Standard Chartered</b> 22911607133 — full statement May 2025–May 2026 extracted (closed 12 May 2026). Monthly eStatements also available; password is the account number.<br>
+    • <b>Airtel Black</b> 10101017262802 — bills every month with amounts shown above.<br>
+    • <b>DTJ010 office</b> (DLF Jasola) maintenance + electricity bills present throughout the period.<br>
+    • Other accounts (company current, credit cards, Indian Bank loan, etc.) not yet fully located in email. Upload statements or point me to them for full multi-account view.
+  </div>
+</div>
+
+<script>
+new Chart(document.getElementById('airtelChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Apr25','May25','Jun25','Jul25','Aug25','Sep25','Oct25','Nov25','Dec25','Jan26','Feb26','Mar26','Apr26','May26','Jun26','Jul26','Aug26','Sep26','Oct26'],
+    datasets: [{ label: 'Airtel Black (₹)', data: [3682,3372,3729,3704,3723,3797,3834,3850,3844,3848,3836,3827,3525,3785,3840,3840,3833,3848,3898], backgroundColor: '#0f3460' }]
+  },
+  options: { plugins: { title: { display: true, text: 'Airtel Black monthly bills (Apr 2025 – Oct 2026)' } }, scales: { y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('scChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['UPI / transfers out', 'Salary / BT in', 'Interest'],
+    datasets: [{ data: [228458, 119600, 379], backgroundColor: ['#e94560','#16a085','#533483'] }]
+  },
+  options: { plugins: { title: { display: true, text: 'SC Account cashflow (May 2025 – May 2026)' } } }
+});
+</script>
+</body>
+</html>
