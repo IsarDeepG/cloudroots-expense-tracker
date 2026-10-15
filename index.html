@@ -3,188 +3,644 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CloudRoots outflows · who, how often</title>
+<title>CloudRoots · who was paid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1c1915;
-    --muted: #5c564c;
-    --line: #e4ddd0;
-    --paper: #f6f1e8;
-    --card: #fffdf8;
-    --rust: #9a3412;
-    --rust-soft: #f3e6dc;
-    --pine: #1f4d3a;
-    --pine-soft: #e5f0ea;
-    --navy: #1e3344;
+    --ink: #1c1917;
+    --muted: #5e574e;
+    --line: #e3dbd0;
+    --paper: #efeae3;
+    --card: #fffdfb;
+    --rail: #141c18;
+    --rail-2: #1c2822;
+    --cream: #f3eee6;
+    --copper: #e0a07a;
+    --last: #8c3a1e;
+    --now: #1f4d3a;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif; background: var(--paper); color: var(--ink); }
-  header { background: var(--navy); color: #f6f1e8; padding: 1.6rem 1.4rem 1.3rem; }
-  header h1 { margin: 0; font-size: 1.7rem; font-weight: 600; letter-spacing: -0.02em; }
-  header p { margin: 0.35rem 0 0; opacity: 0.85; font-family: system-ui, sans-serif; font-size: 0.92rem; }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 1.2rem 1rem 3rem; }
-  .howto { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 0.9rem 1rem; font-family: system-ui, sans-serif; font-size: 0.92rem; line-height: 1.45; }
-  .howto strong { font-weight: 650; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 0.6rem; margin: 0.9rem 0 1rem; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0.75rem 0.8rem; }
-  .card .k { font-family: system-ui, sans-serif; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
-  .card .v { font-size: 1.25rem; margin-top: 0.15rem; }
-  .tabs { display: flex; gap: 0.4rem; margin: 0.4rem 0 0.8rem; flex-wrap: wrap; }
-  .tabs button { font-family: system-ui, sans-serif; border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 0.45rem 0.9rem; cursor: pointer; color: var(--ink); }
-  .tabs button.on { background: var(--navy); color: #f6f1e8; border-color: var(--navy); }
-  .tools { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.8rem; }
-  input[type=search] { flex: 1; font-family: system-ui, sans-serif; font-size: 1rem; padding: 0.55rem 0.75rem; border-radius: 10px; border: 1px solid var(--line); background: var(--card); }
-  h2 { font-size: 1.15rem; margin: 1.2rem 0 0.35rem; }
-  .sub { font-family: system-ui, sans-serif; color: var(--muted); font-size: 0.88rem; margin: 0 0 0.6rem; }
-  .row { display: grid; grid-template-columns: 1fr auto; gap: 0.4rem 1rem; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0.75rem 0.85rem; margin-bottom: 0.45rem; }
-  .name { font-size: 1.05rem; }
-  .tag { font-family: system-ui, sans-serif; font-size: 0.72rem; border-radius: 999px; padding: 0.1rem 0.45rem; margin-left: 0.35rem; background: var(--rust-soft); color: var(--rust); vertical-align: 2px; }
-  .tag.team { background: #e7eef8; color: #1e3a5f; }
-  .tag.family { background: #f3e8f5; color: #6b2d6b; }
-  .sent { font-family: system-ui, sans-serif; font-size: 0.92rem; margin-top: 0.15rem; }
-  .meta { font-family: system-ui, sans-serif; font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
-  .amt { font-size: 1.05rem; text-align: right; white-space: nowrap; }
-  .dots, .dotrow { display: flex; gap: 3px; }
-  .dots i { width: 22px; height: 14px; border-radius: 3px; background: #efe8dc; display: block; }
-  .dots i.on { background: var(--rust); }
-  .dotrow span { font-family: system-ui, sans-serif; font-size: 0.58rem; color: var(--muted); width: 22px; text-align: center; }
-  .empty { font-family: system-ui, sans-serif; background: var(--pine-soft); color: var(--pine); border-radius: 12px; padding: 0.8rem 0.9rem; }
-  .bar { height: 6px; background: #efe8dc; border-radius: 99px; margin-top: 0.4rem; overflow: hidden; }
-  .bar b { display: block; height: 100%; background: var(--rust); }
-  .note { font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--muted); margin-top: 1.2rem; }
-  @media (max-width: 640px) { .amt { text-align: left; } .row { grid-template-columns: 1fr; } }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--paper);
+    font-family: "Source Sans 3", "Segoe UI", sans-serif;
+    font-size: 16px;
+  }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+  .app { height: 100dvh; display: grid; grid-template-columns: 400px 1fr; }
+  .rail, .stage { min-height: 0; }
+  .rail {
+    display: flex; flex-direction: column;
+    background: var(--rail); color: var(--cream);
+    -webkit-font-smoothing: antialiased;
+  }
+  .mast { padding: 22px 18px 12px; }
+  .mark {
+    margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--copper);
+  }
+  .mast h1 { margin: 8px 0 0; }
+  .homebtn {
+    display: block; padding: 0; border: 0; background: none; text-align: left; color: inherit;
+    font-family: Fraunces, Georgia, serif; font-size: 1.85rem; font-weight: 560;
+    letter-spacing: -0.03em; line-height: 1;
+  }
+  .mast-total {
+    margin: 10px 0 0; font-family: Fraunces, Georgia, serif; font-size: 1.55rem;
+    font-weight: 560; letter-spacing: -0.03em;
+  }
+  .mast-sub { margin: 4px 0 0; color: #a89f92; font-size: 0.84rem; line-height: 1.4; }
+  .tools { padding: 4px 14px 0; }
+  .seg {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+    background: var(--rail-2); padding: 3px; border-radius: 12px;
+  }
+  .seg button {
+    border: 0; background: transparent; color: #c9c0b6; border-radius: 9px;
+    padding: 7px 2px 6px; font-size: 12.5px; font-weight: 700;
+  }
+  .seg button span { display: block; margin-top: 1px; font-size: 10px; font-weight: 600; color: #8d8478; }
+  .seg button.on { background: var(--cream); color: var(--ink); }
+  .seg button.on span { color: var(--muted); }
+  .search { display: block; margin: 10px 0 8px; }
+  .search input {
+    width: 100%; background: var(--rail-2); border: 1px solid #2c3c34; color: var(--cream);
+    border-radius: 12px; padding: 10px 12px;
+  }
+  .search input::placeholder { color: #8d8478; }
+  .chips { display: none; }
+  .cadence {
+    width: 100%; margin: 0 0 10px; background: var(--rail-2); color: var(--cream);
+    border: 1px solid #2c3c34; border-radius: 12px; padding: 8px 10px;
+  }
+  .cadence[hidden] { display: none; }
+  .scroll { overflow: auto; padding: 0 8px 28px; scrollbar-width: thin; scrollbar-color: #3a463f transparent; }
+  .group {
+    position: sticky; top: 0; z-index: 1; background: var(--rail);
+    padding: 12px 10px 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: #8d8478;
+  }
+  .railnote, .empty { margin: 0 10px 8px; color: #a89f92; font-size: 0.84rem; line-height: 1.4; }
+  .focusbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 8px 10px; padding: 8px 10px; border-radius: 10px; background: #243028; color: var(--cream);
+    font-size: 0.86rem;
+  }
+  .focusbar button { border: 0; background: transparent; color: var(--copper); font-weight: 700; padding: 0; }
+  .row {
+    width: 100%; text-align: left; display: grid; grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 10px; align-items: center; padding: 8px 10px; margin-bottom: 2px;
+    border: 0; border-radius: 12px; background: transparent; color: inherit;
+  }
+  .row:hover { background: rgba(255,255,255,0.04); }
+  .row.on { background: rgba(255,255,255,0.08); box-shadow: inset 3px 0 0 var(--copper); }
+  .av {
+    width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.02em; background: #2a3330; color: var(--cream);
+  }
+  .av[data-b="team"] { background: #243f34; color: #d7ebe0; }
+  .av[data-b="family"] { background: #4a2c22; color: #f3d4c6; }
+  .av[data-b="vendor"] { background: #1d3348; color: #d5e4f2; }
+  .av[data-b="tax"] { background: #3f351c; color: #f3e6c4; }
+  .av[data-b="cash"] { background: #33302c; color: #ebe4da; }
+  .av[data-b="internal"] { background: #1e3036; color: #d5e7ee; }
+  .av[data-b="other"] { background: #3a2a36; color: #f3dceb; }
+  .nm { display: block; font-size: 15px; font-weight: 650; letter-spacing: -0.01em; }
+  .sent {
+    display: block; margin-top: 1px; color: #a89f92; font-size: 12.5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .amt { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 13.5px; white-space: nowrap; }
+  .stage { overflow: auto; background: var(--paper); }
+  .stage-inner { max-width: 920px; margin: 0 auto; padding: 36px 40px 80px; }
+  .back {
+    display: none; position: sticky; top: 0; z-index: 2; margin: 0 0 14px;
+    border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 14px;
+  }
+  .eyebrow, .kicker {
+    margin: 0; color: var(--muted); font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .stage h2 {
+    font-family: Fraunces, Georgia, serif; font-weight: 560; font-size: 2.8rem;
+    letter-spacing: -0.035em; line-height: 1.05; margin: 6px 0 8px;
+  }
+  .lead { margin: 0 0 18px; font-size: 1.12rem; line-height: 1.45; max-width: 40rem; }
+  .hero {
+    background: var(--ink); color: #f6f1e8; border-radius: 22px; padding: 20px 22px 18px;
+  }
+  .hero .kicker { color: #cbbba8; }
+  .hero-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+  .hero strong {
+    font-family: Fraunces, Georgia, serif; font-weight: 560; font-size: 2.7rem;
+    letter-spacing: -0.03em; line-height: 1;
+  }
+  .hero .when { margin: 6px 0 0; color: #cbbba8; font-size: 0.92rem; }
+  .splitbar { display: flex; height: 10px; gap: 3px; margin: 16px 0 12px; }
+  .splitbar i { display: block; height: 100%; border-radius: 99px; min-width: 6px; }
+  .splitbar i.last { background: #e0a07a; }
+  .splitbar i.now { background: #8fbfa8; }
+  .splitlab { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .splitlab p { margin: 0; color: #e7dfd4; font-size: 0.95rem; line-height: 1.35; }
+  .splitlab b { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
+  .splitlab .last b { color: #e0a07a; }
+  .splitlab .now b { color: #8fbfa8; }
+  .splitlab strong { font-family: Fraunces, Georgia, serif; font-size: 1.35rem; font-weight: 560; letter-spacing: -0.02em; }
+  .cal { margin: 12px 0 0; color: #cbbba8; font-size: 0.88rem; }
+  .years { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .year, .from article, .note, .feat, .buckcard {
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  }
+  .year { padding: 14px 14px 12px; }
+  .year .k { margin: 0; color: var(--muted); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+  .year em { font-style: normal; color: var(--muted); font-size: 0.92rem; }
+  .mbars { display: flex; align-items: flex-end; gap: 4px; margin-top: 10px; height: 48px; }
+  .mbar { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+  .mbar i { display: block; width: 100%; max-width: 18px; border-radius: 3px 3px 1px 1px; background: #e7e0d6; }
+  .mbar i.on { background: var(--last); }
+  .year.nowish .mbar i.on { background: var(--now); }
+  .mbar span { margin-top: 4px; font-size: 9px; color: var(--muted); letter-spacing: -0.02em; }
+  .from { display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px; margin-top: 12px; }
+  .from article { padding: 14px 16px; }
+  .from .k { margin: 0; color: var(--muted); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .from strong { display: block; margin-top: 4px; font-size: 1.08rem; }
+  .from .sub { display: block; margin-top: 3px; color: var(--muted); font-size: 0.88rem; }
+  .note { margin-top: 12px; padding: 14px 16px; background: #fff8ee; border-color: #ead7b8; }
+  .badge {
+    display: inline-block; margin: 0 0 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #7a5412; background: #f3e2c4; border-radius: 99px; padding: 3px 8px;
+  }
+  .note h3 { margin: 0 0 6px; font-family: Fraunces, Georgia, serif; font-size: 1.25rem; font-weight: 560; }
+  .note p { margin: 0; line-height: 1.45; }
+  .sec {
+    margin: 26px 0 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .pays { list-style: none; margin: 0; padding: 0; }
+  .pay {
+    display: grid; grid-template-columns: 88px 1fr; gap: 14px;
+    padding: 14px 0; border-bottom: 1px solid var(--line);
+  }
+  .pay time b {
+    display: block; font-family: Fraunces, Georgia, serif; font-size: 1.45rem; font-weight: 560; line-height: 1;
+  }
+  .pay time span { color: var(--muted); font-size: 0.82rem; }
+  .paytop { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .payamt { font-variant-numeric: tabular-nums; font-size: 1.12rem; }
+  .frombit {
+    display: inline-flex; align-items: baseline; gap: 6px; background: #f6f1ea;
+    border-radius: 999px; padding: 4px 10px;
+  }
+  .frombit span { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--last); }
+  details { margin-top: 6px; }
+  details summary { cursor: pointer; color: #8a8176; font-size: 0.84rem; }
+  details p { margin: 6px 0 0; color: var(--muted); font-size: 0.84rem; line-height: 1.4; word-break: break-word; }
+  .foot { margin-top: 22px; color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+  .bar { display: flex; height: 14px; gap: 3px; margin: 14px 0; }
+  .bar i { display: block; height: 100%; border-radius: 4px; min-width: 4px; }
+  .bucks { margin: 0 0 8px; padding: 0; list-style: none; }
+  .buck {
+    width: 100%; display: grid; grid-template-columns: 12px 1fr auto; gap: 10px; align-items: center;
+    text-align: left; background: transparent; border: 0; border-bottom: 1px solid var(--line);
+    padding: 9px 0; font-weight: 650;
+  }
+  .buck:hover { color: var(--last); }
+  .sw { width: 10px; height: 10px; border-radius: 3px; }
+  .buck em { font-style: normal; font-variant-numeric: tabular-nums; font-weight: 650; }
+  .hint { margin: 0 0 22px; color: var(--muted); font-size: 0.86rem; }
+  .feats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .feat { text-align: left; padding: 16px 16px 14px; }
+  .feat:hover { border-color: #d7b5a2; }
+  .feat h3 { margin: 4px 0; font-family: Fraunces, Georgia, serif; font-size: 1.55rem; font-weight: 560; }
+  .feat p { margin: 0; color: var(--muted); line-height: 1.4; }
+  .feat .big { margin-top: 10px; font-family: Fraunces, Georgia, serif; font-size: 1.45rem; color: var(--ink); font-weight: 560; }
+  .toplist { margin-top: 8px; }
+  .mini {
+    width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: baseline;
+    text-align: left; background: transparent; border: 0; border-bottom: 1px solid var(--line);
+    padding: 10px 0;
+  }
+  .mini:hover .mini-name { color: var(--last); }
+  .mini-name { font-weight: 700; }
+  .mini small { display: block; color: var(--muted); font-weight: 500; }
+  .quiet { color: var(--muted); line-height: 1.45; }
+  .gaps { margin: 8px 0 0; padding-left: 18px; color: var(--muted); }
+  .gaps li { margin: 4px 0; }
+  h3.block { margin: 28px 0 8px; font-family: Fraunces, Georgia, serif; font-size: 1.45rem; font-weight: 560; }
+  @media (max-width: 860px) {
+    .app { grid-template-columns: 1fr; }
+    .stage { display: none; }
+    .stage.show { display: block; position: fixed; inset: 0; z-index: 5; background: var(--paper); }
+    .back { display: inline-flex; }
+    .stage-inner { padding: 12px 16px 56px; }
+    .stage h2 { font-size: 2.15rem; }
+    .hero strong { font-size: 2.15rem; }
+    .hero-row, .splitlab, .years, .from, .feats { grid-template-columns: 1fr; display: grid; }
+    .hero-row { display: flex; flex-direction: column; align-items: flex-start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+  }
 </style>
 </head>
 <body>
-<header>
-  <h1>Who the money went to</h1>
-  <p id="subhead"></p>
-</header>
-<div class="wrap">
-  <div class="howto">
-    A useful tracker separates three things. <strong>Vendor</strong> is the company. <strong>Payee</strong> is the person the transfer was made to. <strong>Bill</strong> is a charge you should expect again.
-    Cadence comes from the months they were actually paid — not from the label on the bank line.
-    One payment in a 12-month statement is <em>once this year</em>. It is not yet proof of a yearly bill.
-  </div>
-  <div class="cards" id="cards"></div>
-  <div class="tabs">
-    <button id="t-vendors" type="button">Vendors</button>
-    <button id="t-payees" class="on" type="button">Payees</button>
-    <button id="t-bills" type="button">Bills</button>
-  </div>
-  <div class="tools"><input id="q" type="search" placeholder="Search a name"></div>
-  <div id="view"></div>
-  <p class="note" id="foot"></p>
+<div class="app">
+  <aside class="rail">
+    <header class="mast">
+      <p class="mark">CloudRoots</p>
+      <h1><button type="button" class="homebtn" id="homebtn">Who was paid</button></h1>
+      <p class="mast-total" id="brandtotal"></p>
+      <p class="mast-sub" id="brandsub"></p>
+    </header>
+    <div class="tools">
+      <div class="seg" id="tabs"></div>
+      <label class="search"><input id="q" type="search" placeholder="Search every name" autocomplete="off"></label>
+      <select id="cadence" class="cadence" hidden></select>
+    </div>
+    <div class="scroll" id="list"></div>
+  </aside>
+  <main class="stage" id="detail">
+    <div class="stage-inner" id="view"></div>
+  </main>
 </div>
-<script id="data" type="application/json">{"period": "1 Apr 2025 – 31 Mar 2026", "account": "Axis current account XX8760 · CloudRoots Infotech LLP", "totalOut": 9003458.17, "opening": 293520.74, "credits": 9311271.4, "closing": 601333.97, "months": ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"], "rows": [{"name": "Lalimma (Axis)", "bucket": "family", "tag": "Family", "n": 11, "total": 930000.0, "typical": 100000.0, "usualMonth": 100000.0, "cadence": "most-months", "sentence": "About ₹1,00,000 in most months, not every month", "first": "Apr 2025", "last": "Mar 2026", "months": [100000.0, 100000.0, 100000.0, 0, 100000.0, 150000.0, 100000.0, 0, 160000.0, 0, 0, 120000.0], "bill": false}, {"name": "Studio Ezube", "bucket": "vendor", "tag": "Vendor", "n": 5, "total": 819000.0, "typical": 125000.0, "usualMonth": 200000.0, "cadence": "irregular", "sentence": "5 payments, no fixed cycle — usually ₹1,25,000 each", "first": "Nov 2025", "last": "Feb 2026", "months": [0, 0, 0, 0, 0, 0, 0, 165000.0, 200000.0, 0, 454000.0, 0], "bill": false}, {"name": "Avishek Tyagi", "bucket": "team", "tag": "Team", "n": 11, "total": 683457.0, "typical": 60480.0, "usualMonth": 60830.0, "cadence": "monthly", "sentence": "About ₹60,830 every month", "first": "Apr 2025", "last": "Mar 2026", "months": [51800.0, 0, 50400.0, 60480.0, 0, 120960.0, 61180.0, 67480.0, 79717.0, 60480.0, 70480.0, 60480.0], "bill": false}, {"name": "Branch transfer (no name)", "bucket": "internal", "tag": "No payee name", "n": 2, "total": 635260.0, "typical": 317630.0, "usualMonth": 317630.0, "cadence": "irregular", "sentence": "2 payments, no fixed cycle — usually ₹3,17,630 each", "first": "Apr 2025", "last": "May 2025", "months": [316380.0, 318880.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Joint Isar & Lalimma", "bucket": "family", "tag": "Family", "n": 11, "total": 590000.0, "typical": 45000.0, "usualMonth": 45000.0, "cadence": "monthly", "sentence": "About ₹45,000 every month", "first": "Apr 2025", "last": "Mar 2026", "months": [45000.0, 90000.0, 45000.0, 45000.0, 45000.0, 45000.0, 45000.0, 0, 90000.0, 0, 70000.0, 70000.0], "bill": false}, {"name": "Harinder Yadav", "bucket": "team", "tag": "Team", "n": 12, "total": 527430.0, "typical": 43550.0, "usualMonth": 44075.0, "cadence": "monthly", "sentence": "About ₹44,075 every month since May 2025", "first": "May 2025", "last": "Mar 2026", "months": [0, 43900.0, 43200.0, 43200.0, 0, 86400.0, 43200.0, 43900.0, 45340.0, 44250.0, 82200.0, 51840.0], "bill": false}, {"name": "Isar (own Axis)", "bucket": "family", "tag": "Own account", "n": 18, "total": 498585.17, "typical": 24500.0, "usualMonth": 43500.0, "cadence": "several-a-month", "sentence": "Several times a month — usually ₹24,500 each time", "first": "Apr 2025", "last": "Mar 2026", "months": [100000.0, 47000.0, 40000.0, 20000.0, 47340.0, 40000.0, 39416.0, 0, 13000.0, 76119.0, 0, 75710.17], "bill": false}, {"name": "Sanjeev Yadav", "bucket": "team", "tag": "Team", "n": 12, "total": 479510.0, "typical": 41140.0, "usualMonth": 41490.0, "cadence": "monthly", "sentence": "About ₹41,490 every month", "first": "Apr 2025", "last": "Mar 2026", "months": [41840.0, 0, 41140.0, 41140.0, 0, 82280.0, 41840.0, 41140.0, 41140.0, 41140.0, 56425.0, 51425.0], "bill": false}, {"name": "Rohit Sahay", "bucket": "team", "tag": "Team", "n": 11, "total": 409040.0, "typical": 36800.0, "usualMonth": 37150.0, "cadence": "monthly", "sentence": "About ₹37,150 every month since May 2025", "first": "May 2025", "last": "Mar 2026", "months": [0, 33400.0, 32000.0, 36800.0, 0, 73600.0, 37500.0, 36800.0, 37500.0, 36800.0, 42320.0, 42320.0], "bill": false}, {"name": "Ravi Kumar", "bucket": "team", "tag": "Team", "n": 13, "total": 351102.0, "typical": 30000.0, "usualMonth": 30000.0, "cadence": "monthly", "sentence": "About ₹30,000 every month since May 2025", "first": "May 2025", "last": "Mar 2026", "months": [0, 50700.0, 30000.0, 30000.0, 0, 30000.0, 60000.0, 30000.0, 30402.0, 30000.0, 30000.0, 30000.0], "bill": false}, {"name": "CBDT (income tax)", "bucket": "tax", "tag": "Tax", "n": 22, "total": 348786.0, "typical": 5000.0, "usualMonth": 30000.0, "cadence": "several-a-month", "sentence": "Several times a month — usually ₹5,000 each time", "first": "May 2025", "last": "Mar 2026", "months": [0, 13180.0, 35000.0, 38500.0, 16460.0, 117450.0, 25000.0, 15000.0, 0, 0, 0, 88196.0], "bill": true}, {"name": "Vanshika Sethi", "bucket": "team", "tag": "Team", "n": 12, "total": 284500.0, "typical": 23750.0, "usualMonth": 27000.0, "cadence": "monthly", "sentence": "About ₹27,000 every month since May 2025", "first": "May 2025", "last": "Mar 2026", "months": [0, 36000.0, 18000.0, 20500.0, 0, 36000.0, 36000.0, 27000.0, 27000.0, 27000.0, 30000.0, 27000.0], "bill": false}, {"name": "Kishan Kumar", "bucket": "team", "tag": "Team", "n": 7, "total": 231018.0, "typical": 38532.0, "usualMonth": 36266.0, "cadence": "monthly-stopped", "sentence": "About ₹36,266 most months, then stopped after Dec 2025", "first": "Apr 2025", "last": "Dec 2025", "months": [34000.0, 34000.0, 41000.0, 38532.0, 0, 77064.0, 0, 0, 6422.0, 0, 0, 0], "bill": false}, {"name": "Cash · S C G", "bucket": "cash", "tag": "Cash", "n": 4, "total": 200000.0, "typical": 50000.0, "usualMonth": 100000.0, "cadence": "irregular", "sentence": "4 payments, no fixed cycle — usually ₹50,000 each", "first": "Oct 2025", "last": "Nov 2025", "months": [0, 0, 0, 0, 0, 0, 50000.0, 150000.0, 0, 0, 0, 0], "bill": false}, {"name": "Pooja Talwar", "bucket": "team", "tag": "Team", "n": 4, "total": 186000.0, "typical": 46500.0, "usualMonth": 45000.0, "cadence": "irregular", "sentence": "4 payments, no fixed cycle — usually ₹46,500 each", "first": "May 2025", "last": "Nov 2025", "months": [0, 45000.0, 45000.0, 0, 0, 0, 0, 96000.0, 0, 0, 0, 0], "bill": false}, {"name": "DLF Tower B", "bucket": "vendor", "tag": "Office", "n": 12, "total": 167996.0, "typical": 14018.0, "usualMonth": 14055.0, "cadence": "monthly", "sentence": "About ₹14,055 every month", "first": "Apr 2025", "last": "Mar 2026", "months": [13034.0, 14291.0, 14469.0, 14450.0, 13981.0, 13943.0, 14055.0, 14110.0, 13966.0, 13708.0, 0, 27989.0], "bill": true}, {"name": "Cash · unspecified", "bucket": "cash", "tag": "Cash", "n": 4, "total": 150000.0, "typical": 42500.0, "usualMonth": 50000.0, "cadence": "irregular", "sentence": "4 payments, no fixed cycle — usually ₹42,500 each", "first": "Jul 2025", "last": "Mar 2026", "months": [0, 0, 0, 50000.0, 0, 0, 0, 0, 0, 50000.0, 0, 50000.0], "bill": false}, {"name": "Akash Solanki", "bucket": "team", "tag": "Team", "n": 3, "total": 146337.0, "typical": 50940.0, "usualMonth": 50940.0, "cadence": "every-2-months", "sentence": "About ₹50,940 every 2 months, then stopped after Aug 2025", "first": "Apr 2025", "last": "Aug 2025", "months": [50940.0, 0, 50940.0, 0, 44457.0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Unnamed transfer", "bucket": "internal", "tag": "No payee name", "n": 7, "total": 145414.0, "typical": 10000.0, "usualMonth": 145414.0, "cadence": "cluster", "sentence": "₹1,45,414 across 7 payments, all in Jan 2026", "first": "Jan 2026", "last": "Jan 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 145414.0, 0, 0], "bill": false}, {"name": "Snehal Tyagi", "bucket": "team", "tag": "Team", "n": 7, "total": 117200.0, "typical": 18000.0, "usualMonth": 18000.0, "cadence": "monthly", "sentence": "About ₹18,000 every month since Sep 2025", "first": "Sep 2025", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 14500.0, 15700.0, 15000.0, 18000.0, 18000.0, 18000.0, 18000.0], "bill": false}, {"name": "Sumit Singh", "bucket": "team", "tag": "Team", "n": 7, "total": 117200.0, "typical": 17420.0, "usualMonth": 17420.0, "cadence": "monthly", "sentence": "About ₹17,420 every month since Sep 2025", "first": "Sep 2025", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 14500.0, 15700.0, 15000.0, 17420.0, 18580.0, 18000.0, 18000.0], "bill": false}, {"name": "KG Sharma & Co", "bucket": "vendor", "tag": "Professional", "n": 1, "total": 108000.0, "typical": 108000.0, "usualMonth": 108000.0, "cadence": "once", "sentence": "₹1,08,000 once in this year (Dec 2025)", "first": "Dec 2025", "last": "Dec 2025", "months": [0, 0, 0, 0, 0, 0, 0, 0, 108000.0, 0, 0, 0], "bill": true}, {"name": "Cash · Subha", "bucket": "cash", "tag": "Cash", "n": 2, "total": 100000.0, "typical": 50000.0, "usualMonth": 100000.0, "cadence": "cluster", "sentence": "₹1,00,000 across 2 payments, all in Sep 2025", "first": "Sep 2025", "last": "Sep 2025", "months": [0, 0, 0, 0, 0, 100000.0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Annu Agrawal", "bucket": "team", "tag": "Team", "n": 6, "total": 95700.0, "typical": 15850.0, "usualMonth": 32000.0, "cadence": "irregular", "sentence": "6 payments, no fixed cycle — usually ₹15,850 each", "first": "Apr 2025", "last": "Jul 2025", "months": [32000.0, 33000.0, 0, 30700.0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Interloop", "bucket": "vendor", "tag": "Vendor", "n": 5, "total": 75391.0, "typical": 17280.0, "usualMonth": 19183.0, "cadence": "irregular", "sentence": "5 payments, no fixed cycle — usually ₹17,280 each", "first": "Dec 2025", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 53810.0, 2398.0, 0, 19183.0], "bill": false}, {"name": "Kavita Shahu", "bucket": "team", "tag": "Team", "n": 2, "total": 71700.0, "typical": 35850.0, "usualMonth": 35850.0, "cadence": "irregular", "sentence": "2 payments, no fixed cycle — usually ₹35,850 each", "first": "Apr 2025", "last": "Jun 2025", "months": [35100.0, 0, 36600.0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Idrish", "bucket": "other", "tag": "Other person", "n": 1, "total": 70000.0, "typical": 70000.0, "usualMonth": 70000.0, "cadence": "once", "sentence": "₹70,000 once in this year (Dec 2025)", "first": "Dec 2025", "last": "Dec 2025", "months": [0, 0, 0, 0, 0, 0, 0, 0, 70000.0, 0, 0, 0], "bill": false}, {"name": "Cash · Subhas", "bucket": "cash", "tag": "Cash", "n": 1, "total": 50000.0, "typical": 50000.0, "usualMonth": 50000.0, "cadence": "once", "sentence": "₹50,000 once in this year (Apr 2025)", "first": "Apr 2025", "last": "Apr 2025", "months": [50000.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Cash · S G G", "bucket": "cash", "tag": "Cash", "n": 1, "total": 50000.0, "typical": 50000.0, "usualMonth": 50000.0, "cadence": "once", "sentence": "₹50,000 once in this year (Oct 2025)", "first": "Oct 2025", "last": "Oct 2025", "months": [0, 0, 0, 0, 0, 0, 50000.0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Municipal Corporation of Delhi", "bucket": "vendor", "tag": "Civic", "n": 1, "total": 48402.0, "typical": 48402.0, "usualMonth": 48402.0, "cadence": "once", "sentence": "₹48,402 once in this year (Sep 2025)", "first": "Sep 2025", "last": "Sep 2025", "months": [0, 0, 0, 0, 0, 48402.0, 0, 0, 0, 0, 0, 0], "bill": true}, {"name": "Lali Automobiles", "bucket": "vendor", "tag": "Vendor", "n": 1, "total": 38653.0, "typical": 38653.0, "usualMonth": 38653.0, "cadence": "once", "sentence": "₹38,653 once in this year (Jan 2026)", "first": "Jan 2026", "last": "Jan 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 38653.0, 0, 0], "bill": false}, {"name": "Dharamraj", "bucket": "team", "tag": "Team", "n": 2, "total": 36000.0, "typical": 18000.0, "usualMonth": 36000.0, "cadence": "cluster", "sentence": "₹36,000 across 2 payments, all in Mar 2026", "first": "Mar 2026", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36000.0], "bill": false}, {"name": "Ritika Jain", "bucket": "team", "tag": "Team", "n": 2, "total": 35500.0, "typical": 17750.0, "usualMonth": 35500.0, "cadence": "cluster", "sentence": "₹35,500 across 2 payments, all in Mar 2026", "first": "Mar 2026", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35500.0], "bill": false}, {"name": "Cash · Anita", "bucket": "cash", "tag": "Cash", "n": 1, "total": 35000.0, "typical": 35000.0, "usualMonth": 35000.0, "cadence": "once", "sentence": "₹35,000 once in this year (May 2025)", "first": "May 2025", "last": "May 2025", "months": [0, 35000.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "BTB Venture", "bucket": "vendor", "tag": "Vendor", "n": 1, "total": 34344.0, "typical": 34344.0, "usualMonth": 34344.0, "cadence": "once", "sentence": "₹34,344 once in this year (Apr 2025)", "first": "Apr 2025", "last": "Apr 2025", "months": [34344.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Shining Stars Consult", "bucket": "vendor", "tag": "Vendor", "n": 1, "total": 32387.0, "typical": 32387.0, "usualMonth": 32387.0, "cadence": "once", "sentence": "₹32,387 once in this year (Mar 2026)", "first": "Mar 2026", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32387.0], "bill": false}, {"name": "Kamal Singh Negi", "bucket": "other", "tag": "Other person", "n": 1, "total": 32000.0, "typical": 32000.0, "usualMonth": 32000.0, "cadence": "once", "sentence": "₹32,000 once in this year (Mar 2026)", "first": "Mar 2026", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32000.0], "bill": false}, {"name": "Priyanka Jain", "bucket": "other", "tag": "Other person", "n": 1, "total": 31500.0, "typical": 31500.0, "usualMonth": 31500.0, "cadence": "once", "sentence": "₹31,500 once in this year (Jun 2025)", "first": "Jun 2025", "last": "Jun 2025", "months": [0, 0, 31500.0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Policybazaar", "bucket": "vendor", "tag": "Insurance", "n": 1, "total": 17419.0, "typical": 17419.0, "usualMonth": 17419.0, "cadence": "once", "sentence": "₹17,419 once in this year (Feb 2026)", "first": "Feb 2026", "last": "Feb 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17419.0, 0], "bill": true}, {"name": "Zimyo Consulting", "bucket": "vendor", "tag": "Software", "n": 1, "total": 12960.0, "typical": 12960.0, "usualMonth": 12960.0, "cadence": "once", "sentence": "₹12,960 once in this year (May 2025)", "first": "May 2025", "last": "May 2025", "months": [0, 12960.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": true}, {"name": "Mushki Qamar", "bucket": "other", "tag": "Other person", "n": 1, "total": 10667.0, "typical": 10667.0, "usualMonth": 10667.0, "cadence": "once", "sentence": "₹10,667 once in this year (Apr 2025)", "first": "Apr 2025", "last": "Apr 2025", "months": [10667.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}], "buckets": {"family": 2018585.17, "vendor": 1354552.0, "team": 3771694.0, "internal": 780674.0, "tax": 348786.0, "cash": 585000.0, "other": 144167.0}, "bills": {"DLF Tower B": {"kind": "Standing office bill", "when": "Every month", "note": "Maintenance and electricity for the Jasola office. One month (Feb) had no separate debit; Jan and Mar had two."}, "KG Sharma & Co": {"kind": "Professional fee", "when": "Once this year", "note": "Only one debit in these 12 months. Treat as possibly yearly until a second year shows up."}, "Policybazaar": {"kind": "Insurance", "when": "Once this year", "note": "One premium. Could be the annual policy, or a one-off. Not proven yearly yet."}, "Municipal Corporation of Delhi": {"kind": "Civic charge", "when": "Once this year", "note": "One payment. Often a yearly property or municipal charge, not confirmed."}, "Zimyo Consulting": {"kind": "HR software", "when": "Once this year", "note": "One invoice. Could be an annual plan or a single bill."}, "CBDT (income tax)": {"kind": "Tax", "when": "Several times a month", "note": "Advance tax and challans, not one calendar bill."}}, "emailBills": [{"name": "Airtel Black", "cadence": "Every month", "amount": "₹3,700–3,900", "note": "Bills in email Apr 2025–Oct 2026. Not a debit on this Axis account."}, {"name": "Slack (3 users)", "cadence": "Every month", "amount": "₹884", "note": "Workspace plan. Seen in email, not on this Axis account."}, {"name": "IGL Gas", "cadence": "Recurring", "amount": "Amount varies", "note": "BP 5000004664. Seen in email, not on this Axis account."}, {"name": "Eleven Labs", "cadence": "Recurring", "amount": "Amount varies", "note": "Receipts in email (Oct 2026). Not on this Axis account."}]}</script>
+<script id="data" type="application/json">{"period": "1 Apr 2025 – 30 Sep 2026", "account": "Axis company CA XX8760", "totalOut": 14587806.17, "monthLabels": ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"], "monthKeys": ["2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09"], "rows": [{"id": "lalimma-axis", "name": "Lalimma (Axis)", "bucket": "family", "tag": "Family", "cadence": "most-months", "sentence": "About ₹1,10,000 in most months, not every month", "n": 17, "total": 1550000.0, "first": "2025-04-08", "last": "2026-08-31", "months": [100000.0, 100000.0, 100000.0, 0.0, 100000.0, 150000.0, 100000.0, 0.0, 160000.0, 0.0, 0.0, 120000.0, 200000.0, 0.0, 200000.0, 120000.0, 100000.0, 0.0], "fy": {"2025-26": {"n": 11, "total": 930000.0}, "2026-27": {"n": 6, "total": 620000.0}}, "cal": {"2025": {"n": 9, "total": 810000.0}, "2026": {"n": 8, "total": 740000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 17, "total": 1550000.0}], "payments": [{"date": "2026-08-31", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 80000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-06", "amount": 40000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-03", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-04-04", "amount": 200000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-31", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-21", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-31", "amount": 60000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-03", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-10-31", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-01", "amount": 150000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-08-05", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-08-01", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-06-03", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-05-12", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-04-08", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/LALIMMA AXIS/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "studio-ezube", "name": "Studio Ezube", "bucket": "vendor", "tag": "Vendor", "cadence": "irregular", "sentence": "6 payments, no fixed cycle — usually ₹1,62,500 each", "n": 6, "total": 1047308.0, "first": "2025-11-23", "last": "2026-04-17", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 165000.0, 200000.0, 0.0, 454000.0, 0.0, 228308.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 5, "total": 819000.0}, "2026-27": {"n": 1, "total": 228308.0}}, "cal": {"2025": {"n": 3, "total": 365000.0}, "2026": {"n": 3, "total": 682308.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 6, "total": 1047308.0}], "payments": [{"date": "2026-04-17", "amount": 228308.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/RTGS/UTIBR62026041771135814/STUDIO EZUBE/UNION BANK OF INDIA", "toBank": "Union Bank Of India"}, {"date": "2026-02-16", "amount": 400000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/RTGS/UTIBR62026021657038334/STUDIO EZUBE/UNION BANK OF INDIA", "toBank": "Union Bank Of India"}, {"date": "2026-02-03", "amount": 54000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "NEFT/DH/AXODH03403446711/STUDIO EZUBE/UNION BANK OF INDIA", "toBank": "Union Bank Of India"}, {"date": "2025-12-20", "amount": 200000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/RTGS/UTIBR62025122044900719/STUDIO EZUBE/UNION BANK OF INDIA", "toBank": "Union Bank Of India"}, {"date": "2025-11-26", "amount": 125000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC33029617089/STUDIO EZUBE/UNION BANK OF INDIA", "toBank": "Union Bank Of India"}, {"date": "2025-11-23", "amount": 40000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC32706700112/STUDIO EZUBE/UNION BANK OF INDIA", "toBank": "Union Bank Of India"}], "invoice": null}, {"id": "avishek-tyagi", "name": "Avishek Tyagi", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹61,180 every month", "n": 16, "total": 1022145.0, "first": "2025-04-30", "last": "2026-09-30", "months": [51800.0, 0.0, 50400.0, 60480.0, 0.0, 120960.0, 61180.0, 67480.0, 79717.0, 60480.0, 70480.0, 60480.0, 0.0, 60480.0, 60480.0, 72576.0, 72576.0, 72576.0], "fy": {"2025-26": {"n": 11, "total": 683457.0}, "2026-27": {"n": 5, "total": 338688.0}}, "cal": {"2025": {"n": 8, "total": 492017.0}, "2026": {"n": 8, "total": 530128.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 16, "total": 1022145.0}], "payments": [{"date": "2026-09-30", "amount": 72576.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 72576.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 72576.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 60480.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 60480.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-31", "amount": 60480.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-02-28", "amount": 70480.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-30", "amount": 60480.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-31", "amount": 79717.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2025-11-30", "amount": 67480.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2025-10-31", "amount": 61180.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-30", "amount": 60480.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-01", "amount": 60480.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2025-07-31", "amount": 60480.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2025-06-30", "amount": 50400.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}, {"date": "2025-04-30", "amount": 51800.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Avishek Tygi/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "isar-own-axis", "name": "Isar (own Axis)", "bucket": "family", "tag": "Own account", "cadence": "several-a-month", "sentence": "Several times a month — usually ₹30,000 each time", "n": 26, "total": 1016585.17, "first": "2025-04-08", "last": "2026-09-20", "months": [100000.0, 47000.0, 40000.0, 20000.0, 47340.0, 40000.0, 39416.0, 0.0, 13000.0, 76119.0, 0.0, 75710.17, 0.0, 80000.0, 150000.0, 237000.0, 21000.0, 30000.0], "fy": {"2025-26": {"n": 18, "total": 498585.17}, "2026-27": {"n": 8, "total": 518000.0}}, "cal": {"2025": {"n": 12, "total": 346756.0}, "2026": {"n": 14, "total": 669829.17}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 26, "total": 1016585.17}], "payments": [{"date": "2026-09-20", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 21000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 37000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-06", "amount": 200000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 100000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-03", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-26", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-22", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-13", "amount": 35000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-06", "amount": 25363.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-05", "amount": 15347.17, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-20", "amount": 35000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-20", "amount": 21119.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-05", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-10", "amount": 13000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/873244399/ISARDEEPGANGWANIAXIS", "toBank": null}, {"date": "2025-10-22", "amount": 39416.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/871036300/isaraxis", "toBank": null}, {"date": "2025-09-16", "amount": 40000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/868720889/isaraxis", "toBank": null}, {"date": "2025-08-21", "amount": 22340.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/867108451/isaraxis", "toBank": null}, {"date": "2025-08-11", "amount": 25000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/866475225/isaraxis", "toBank": null}, {"date": "2025-07-08", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/863603263/isaraxis", "toBank": null}, {"date": "2025-06-05", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/859436945/isaraxis", "toBank": null}, {"date": "2025-06-03", "amount": 10000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/859237733/isaraxis", "toBank": null}, {"date": "2025-05-20", "amount": 23000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/857389695/isaraxis", "toBank": null}, {"date": "2025-05-03", "amount": 24000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/854740120/isaraxis", "toBank": null}, {"date": "2025-04-16", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}, {"date": "2025-04-08", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/ISAR AXIS/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "term-deposit", "name": "Term deposit", "bucket": "internal", "tag": "Own deposit", "cadence": "once", "sentence": "₹10,00,000 once (Jun 2026)", "n": 1, "total": 1000000.0, "first": "2026-06-12", "last": "2026-06-12", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000000.0, 0.0, 0.0, 0.0], "fy": {"2026-27": {"n": 1, "total": 1000000.0}}, "cal": {"2026": {"n": 1, "total": 1000000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 1000000.0}], "payments": [{"date": "2026-06-12", "amount": 1000000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "CDP-TD/926040084167528/CLOUDROOTS INFOTECH LLP", "toBank": null}], "invoice": null}, {"id": "harinder-yadav", "name": "Harinder Yadav", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹51,840 every month since May 2025", "n": 17, "total": 786630.0, "first": "2025-05-01", "last": "2026-09-30", "months": [0.0, 43900.0, 43200.0, 43200.0, 0.0, 86400.0, 43200.0, 43900.0, 45340.0, 44250.0, 82200.0, 51840.0, 0.0, 51840.0, 51840.0, 51840.0, 51840.0, 51840.0], "fy": {"2025-26": {"n": 12, "total": 527430.0}, "2026-27": {"n": 5, "total": 259200.0}}, "cal": {"2025": {"n": 8, "total": 349140.0}, "2026": {"n": 9, "total": 437490.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 17, "total": 786630.0}], "payments": [{"date": "2026-09-30", "amount": 51840.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 51840.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 51840.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 51840.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 51840.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-31", "amount": 51840.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2026-02-28", "amount": 48200.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2026-02-16", "amount": 34000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-30", "amount": 44250.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-31", "amount": 45340.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2025-11-30", "amount": 43900.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2025-10-31", "amount": 43200.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-30", "amount": 43200.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-01", "amount": 43200.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2025-07-31", "amount": 43200.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2025-06-30", "amount": 43200.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Harinder/TPARTY TRANSFER", "toBank": null}, {"date": "2025-05-01", "amount": 43900.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12145849789/Harinder Yadav/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}], "invoice": null}, {"id": "sanjeev-yadav", "name": "Sanjeev Yadav", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹51,425 every month", "n": 17, "total": 736635.0, "first": "2025-04-30", "last": "2026-09-30", "months": [41840.0, 0.0, 41140.0, 41140.0, 0.0, 82280.0, 41840.0, 41140.0, 41140.0, 41140.0, 56425.0, 51425.0, 0.0, 51425.0, 51425.0, 51425.0, 51425.0, 51425.0], "fy": {"2025-26": {"n": 12, "total": 479510.0}, "2026-27": {"n": 5, "total": 257125.0}}, "cal": {"2025": {"n": 8, "total": 330520.0}, "2026": {"n": 9, "total": 406115.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 17, "total": 736635.0}], "payments": [{"date": "2026-09-30", "amount": 51425.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 51425.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 51425.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 51425.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 51425.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-31", "amount": 51425.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2026-02-28", "amount": 5000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2026-02-28", "amount": 51425.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-30", "amount": 41140.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-31", "amount": 41140.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2025-11-30", "amount": 41140.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2025-10-31", "amount": 41840.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-30", "amount": 41140.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-01", "amount": 41140.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2025-07-31", "amount": 41140.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2025-06-30", "amount": 41140.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Sanjeev/TPARTY TRANSFER", "toBank": null}, {"date": "2025-04-30", "amount": 41840.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12039415108/Sanjeev yadav/HDFC BANK", "toBank": "Hdfc Bank"}], "invoice": null}, {"id": "cbdt-income-tax", "name": "CBDT (income tax)", "bucket": "tax", "tag": "Tax", "cadence": "several-a-month", "sentence": "Several times a month — usually ₹7,500 each time", "n": 26, "total": 722526.0, "first": "2025-05-03", "last": "2026-08-18", "months": [0.0, 13180.0, 35000.0, 38500.0, 16460.0, 117450.0, 25000.0, 15000.0, 0.0, 0.0, 0.0, 88196.0, 0.0, 0.0, 110000.0, 15000.0, 248740.0, 0.0], "fy": {"2025-26": {"n": 22, "total": 348786.0}, "2026-27": {"n": 4, "total": 373740.0}}, "cal": {"2025": {"n": 17, "total": 260590.0}, "2026": {"n": 9, "total": 461936.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 26, "total": 722526.0}], "payments": [{"date": "2026-08-18", "amount": 248740.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/975035590/TIN 2.0 CBDT TAX PAYMENT/NA", "toBank": null}, {"date": "2026-07-06", "amount": 15000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/966040066/TIN 2.0 CBDT TAX PAYMENT/NA", "toBank": null}, {"date": "2026-06-15", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/961803924/TIN 2.0 CBDT TAX PAYMENT/NA", "toBank": null}, {"date": "2026-06-12", "amount": 60000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/961289498/TIN 2.0 CBDT TAX PAYMENT/NA", "toBank": null}, {"date": "2026-03-23", "amount": 2999.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/944122683/TIN 2.0 CBDT TAX PAYMENT/NA", "toBank": null}, {"date": "2026-03-12", "amount": 3197.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/941930213/TIN 2.0 CBDT TAX PAYMENT/NA", "toBank": null}, {"date": "2026-03-06", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/940555432/TIN 2.0 CBDT TAX PAYMENT/NA", "toBank": null}, {"date": "2026-03-06", "amount": 12000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/940546725/TIN 2.0 CBDT TAX PAYMENT/NA", "toBank": null}, {"date": "2026-03-06", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/940535924/TIN 2.0 CBDT TAX PAYMENT/NA", "toBank": null}, {"date": "2025-11-07", "amount": 5000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/725073759/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-11-07", "amount": 10000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/725073155/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-10-12", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724929028/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-10-08", "amount": 5000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724919843/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-09-22", "amount": 112450.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724798710/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-09-09", "amount": 5000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724728747/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-08-25", "amount": 1460.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724612885/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-08-11", "amount": 10000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724557722/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-08-11", "amount": 5000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724558510/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-07-21", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724411214/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-07-21", "amount": 3500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724409201/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-07-16", "amount": 5000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724368073/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-06-13", "amount": 5000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724109662/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-06-13", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/724109404/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-05-07", "amount": 3180.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/723767230/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-05-07", "amount": 5000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/723763797/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}, {"date": "2025-05-03", "amount": 5000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/723691487/TIN 2.0 CBDT TAX PAYMENT", "toBank": null}], "invoice": null}, {"id": "branch-transfer-no-name", "name": "Branch transfer (no name)", "bucket": "internal", "tag": "No payee name", "cadence": "irregular", "sentence": "2 payments, no fixed cycle — usually ₹3,17,630 each", "n": 2, "total": 635260.0, "first": "2025-04-02", "last": "2025-05-30", "months": [316380.0, 318880.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 2, "total": 635260.0}}, "cal": {"2025": {"n": 2, "total": 635260.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 2, "total": 635260.0}], "payments": [{"date": "2025-05-30", "amount": 318880.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "TRF/4682/TRANSFER", "toBank": null}, {"date": "2025-04-02", "amount": 316380.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "TRF/4682/Transfer", "toBank": null}], "invoice": null}, {"id": "rohit-sahay", "name": "Rohit Sahay", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹42,320 every month since May 2025", "n": 16, "total": 622050.0, "first": "2025-05-01", "last": "2026-09-30", "months": [0.0, 33400.0, 32000.0, 36800.0, 0.0, 73600.0, 37500.0, 36800.0, 37500.0, 36800.0, 42320.0, 42320.0, 0.0, 42320.0, 42320.0, 42320.0, 42320.0, 43730.0], "fy": {"2025-26": {"n": 11, "total": 409040.0}, "2026-27": {"n": 5, "total": 213010.0}}, "cal": {"2025": {"n": 8, "total": 287600.0}, "2026": {"n": 8, "total": 334450.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 16, "total": 622050.0}], "payments": [{"date": "2026-09-30", "amount": 43730.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798073Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 42320.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798073Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 42320.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798073Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 42320.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798073Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 42320.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798073Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-31", "amount": 42320.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798073Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2026-02-28", "amount": 42320.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798073Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-30", "amount": 36800.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798073Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-31", "amount": 37500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798073Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2025-11-30", "amount": 36800.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2025-10-31", "amount": 37500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-30", "amount": 36800.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-01", "amount": 36800.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2025-07-31", "amount": 36800.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2025-06-30", "amount": 32000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Rohit sahay/TPARTY TRANSFER", "toBank": null}, {"date": "2025-05-01", "amount": 33400.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12145713371/Rohit Sahay/STATE BANK OF INDIA", "toBank": "State Bank Of India"}], "invoice": null}, {"id": "joint-isar-lalimma", "name": "Joint Isar & Lalimma", "bucket": "family", "tag": "Family", "cadence": "monthly-stopped", "sentence": "About ₹45,000 most months, then stopped after Mar 2026", "n": 11, "total": 590000.0, "first": "2025-04-08", "last": "2026-03-05", "months": [45000.0, 90000.0, 45000.0, 45000.0, 45000.0, 45000.0, 45000.0, 0.0, 90000.0, 0.0, 70000.0, 70000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 11, "total": 590000.0}}, "cal": {"2025": {"n": 9, "total": 450000.0}, "2026": {"n": 2, "total": 140000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 11, "total": 590000.0}], "payments": [{"date": "2026-03-05", "amount": 70000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH06476216188/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-02-16", "amount": 70000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH04716077291/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-12-31", "amount": 90000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "NEFT/DH/AXODH36523065747/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-10-31", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC30415654313/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-09-01", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC24454856056/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-08-05", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC21757435166/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-07-16", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC19703701525/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-06-13", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC16460910869/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-05-12", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC13228806435/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-05-07", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12790732365/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-04-08", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC09854747401/JOINT ISAR LALIMMA/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}], "invoice": null}, {"id": "ravi-kumar", "name": "Ravi Kumar", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹30,402 every month since May 2025", "n": 19, "total": 573660.0, "first": "2025-05-01", "last": "2026-09-30", "months": [0.0, 50700.0, 30000.0, 30000.0, 0.0, 30000.0, 60000.0, 30000.0, 30402.0, 30000.0, 30000.0, 30000.0, 0.0, 54000.0, 42000.0, 42558.0, 42000.0, 42000.0], "fy": {"2025-26": {"n": 13, "total": 351102.0}, "2026-27": {"n": 6, "total": 222558.0}}, "cal": {"2025": {"n": 10, "total": 261102.0}, "2026": {"n": 9, "total": 312558.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 19, "total": 573660.0}], "payments": [{"date": "2026-09-30", "amount": 42000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 42000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 42000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-01", "amount": 558.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "BETWEEN 01/07/2026 AND 31/07/2026 0 LLP DLF TOWER-8 JASOLA INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 42000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 54000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-31", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-02-28", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-30", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-31", "amount": 30402.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/58798083Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2025-11-30", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2025-10-31", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2025-10-03", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-01", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2025-07-31", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2025-06-30", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Ravi Kumar/TPARTY TRANSFER", "toBank": null}, {"date": "2025-05-30", "amount": 700.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC15060567772/Ravi kumar/FEDERAL BANK", "toBank": "Federal Bank"}, {"date": "2025-05-02", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12253220338/Ravi kumar/FEDERAL BANK", "toBank": "Federal Bank"}, {"date": "2025-05-01", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12145716221/Ravi kumar/FEDERAL BANK", "toBank": "Federal Bank"}], "invoice": null}, {"id": "vanshika-sethi", "name": "Vanshika Sethi", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹27,000 every month since May 2025", "n": 17, "total": 431270.0, "first": "2025-05-01", "last": "2026-09-30", "months": [0.0, 36000.0, 18000.0, 20500.0, 0.0, 36000.0, 36000.0, 27000.0, 27000.0, 27000.0, 30000.0, 27000.0, 0.0, 27000.0, 27000.0, 27000.0, 27000.0, 38770.0], "fy": {"2025-26": {"n": 12, "total": 284500.0}, "2026-27": {"n": 5, "total": 146770.0}}, "cal": {"2025": {"n": 9, "total": 200500.0}, "2026": {"n": 8, "total": 230770.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 17, "total": 431270.0}], "payments": [{"date": "2026-09-30", "amount": 38770.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH27329144481/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-08-31", "amount": 27000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH24389214485/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-07-31", "amount": 27000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH21221117216/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-06-30", "amount": 27000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH18161674119/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-05-31", "amount": 27000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH15104716520/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-03-31", "amount": 27000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH09097282700/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-02-28", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH05936951699/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-01-30", "amount": 27000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "NEFT/DH/AXODH03071569811/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2025-12-31", "amount": 27000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "NEFT/DH/AXODH36523061855/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2025-11-30", "amount": 27000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC33463608574/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2025-10-31", "amount": 36000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC30415456095/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2025-09-30", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC27372171654/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2025-09-01", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC24454852012/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2025-07-31", "amount": 20500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC21219545934/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2025-06-30", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC18180562638/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2025-05-30", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC15060573328/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2025-05-01", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12145722647/Vanshika Sethi/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}], "invoice": null}, {"id": "dlf-tower-b", "name": "DLF Tower B", "bucket": "vendor", "tag": "Office", "cadence": "monthly", "sentence": "About ₹14,110 every month", "n": 16, "total": 253638.0, "first": "2025-04-07", "last": "2026-09-14", "months": [13034.0, 14291.0, 14469.0, 14450.0, 13981.0, 13943.0, 14055.0, 14110.0, 13966.0, 13708.0, 0.0, 27989.0, 14072.0, 0.0, 28472.0, 14455.0, 0.0, 28643.0], "fy": {"2025-26": {"n": 12, "total": 167996.0}, "2026-27": {"n": 4, "total": 85642.0}}, "cal": {"2025": {"n": 9, "total": 126299.0}, "2026": {"n": 7, "total": 127339.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 16, "total": 253638.0}], "payments": [{"date": "2026-09-14", "amount": 28643.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH25702119500/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-07-31", "amount": 14455.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH21221122412/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-06-03", "amount": 28472.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH15430380905/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-04-30", "amount": 14072.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH12041384909/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-03-05", "amount": 14120.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH06476215223/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-03-02", "amount": 13869.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH06152516546/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-01-05", "amount": 13708.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "NEFT/DH/AXODH00563949787/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-12-31", "amount": 13966.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "NEFT/DH/AXODH36523072845/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-11-21", "amount": 14110.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC32589039209/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-10-28", "amount": 14055.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC30191851547/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-09-29", "amount": 13943.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC27264444298/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-08-21", "amount": 13981.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC23374098875/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-07-24", "amount": 14450.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC20568371030/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-06-03", "amount": 14469.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC15489263973/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-05-28", "amount": 14291.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC14846273118/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-04-07", "amount": 13034.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC09745717510/DLF TOWER B/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}], "invoice": null}, {"id": "cash-s-c-g", "name": "Cash · S C G", "bucket": "cash", "tag": "Cash", "cadence": "irregular", "sentence": "5 payments, no fixed cycle — usually ₹50,000 each", "n": 5, "total": 250000.0, "first": "2025-10-27", "last": "2026-06-11", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50000.0, 150000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50000.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 4, "total": 200000.0}, "2026-27": {"n": 1, "total": 50000.0}}, "cal": {"2025": {"n": 4, "total": 200000.0}, "2026": {"n": 1, "total": 50000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 5, "total": 250000.0}], "payments": [{"date": "2026-06-11", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK484028307/723/SECTOR 2172 62/S C GANGW", "toBank": null}, {"date": "2025-11-25", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK462660280/4390/STELLAR I/BY S C G", "toBank": null}, {"date": "2025-11-20", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK462208217/4390/STELLAR I/BY S C G", "toBank": null}, {"date": "2025-11-20", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK462207556/4390/STELLAR I/BY S C G", "toBank": null}, {"date": "2025-10-27", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK459308685/4390/STELLAR I/BY S C G", "toBank": null}], "invoice": null}, {"id": "cash-subhash", "name": "Cash · Subhash", "bucket": "cash", "tag": "Cash", "cadence": "irregular", "sentence": "5 payments, no fixed cycle — usually ₹50,000 each", "n": 5, "total": 250000.0, "first": "2026-01-12", "last": "2026-09-14", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50000.0, 0.0, 50000.0, 0.0, 50000.0, 0.0, 0.0, 50000.0, 50000.0], "fy": {"2025-26": {"n": 2, "total": 100000.0}, "2026-27": {"n": 3, "total": 150000.0}}, "cal": {"2026": {"n": 5, "total": 250000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 5, "total": 250000.0}], "payments": [{"date": "2026-09-14", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK493189035/4390/STELLAR 2176 I/SUBHASH", "toBank": null}, {"date": "2026-08-03", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK489210921/723/SECTOR 2174 62/SUBHASH C", "toBank": null}, {"date": "2026-05-11", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK480605230/4390/STELLAR 2170 I/SUBHASH", "toBank": null}, {"date": "2026-03-16", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK474766203/4390/STELLAR I/SUBHASH", "toBank": null}, {"date": "2026-01-12", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK467999188/4390/STELLAR I/SUBHASH", "toBank": null}], "invoice": null}, {"id": "kavita-shahu", "name": "Kavita Shahu", "bucket": "team", "tag": "Team", "cadence": "most-months", "sentence": "About ₹35,100 in most months, not every month", "n": 7, "total": 249464.0, "first": "2025-04-30", "last": "2026-09-30", "months": [35100.0, 0.0, 36600.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 35100.0, 35100.0, 36232.0, 36232.0, 35100.0], "fy": {"2025-26": {"n": 2, "total": 71700.0}, "2026-27": {"n": 5, "total": 177764.0}}, "cal": {"2025": {"n": 2, "total": 71700.0}, "2026": {"n": 5, "total": 177764.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 7, "total": 249464.0}], "payments": [{"date": "2026-09-30", "amount": 35100.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kavita/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 36232.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kavita/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 36232.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kavita/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 35100.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kavita/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 35100.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kavita/TPARTY TRANSFER", "toBank": null}, {"date": "2025-06-30", "amount": 36600.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kavita/TPARTY TRANSFER", "toBank": null}, {"date": "2025-04-30", "amount": 35100.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12039420479/Kavita Shahu/CENTRAL BANK OF INDI", "toBank": "Central Bank Of Indi"}], "invoice": null}, {"id": "pooja-talwar", "name": "Pooja Talwar", "bucket": "team", "tag": "Team", "cadence": "irregular", "sentence": "5 payments, no fixed cycle — usually ₹48,000 each", "n": 5, "total": 236000.0, "first": "2025-05-31", "last": "2026-09-20", "months": [0.0, 45000.0, 45000.0, 0.0, 0.0, 0.0, 0.0, 96000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50000.0], "fy": {"2025-26": {"n": 4, "total": 186000.0}, "2026-27": {"n": 1, "total": 50000.0}}, "cal": {"2025": {"n": 4, "total": 186000.0}, "2026": {"n": 1, "total": 50000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 5, "total": 236000.0}], "payments": [{"date": "2026-09-20", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH26351813506/POOJA TALWAR/PUNJAB NATIONAL BANK", "toBank": "Punjab National Bank"}, {"date": "2025-11-30", "amount": 48000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC33463615912/POOJA TALWAR/PUNJAB NATIONAL BANK", "toBank": "Punjab National Bank"}, {"date": "2025-11-21", "amount": 48000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC32589041949/POOJA TALWAR/PUNJAB NATIONAL BANK", "toBank": "Punjab National Bank"}, {"date": "2025-06-30", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC18180569148/POOJA TALWAR/PUNJAB NATIONAL BANK", "toBank": "Punjab National Bank"}, {"date": "2025-05-31", "amount": 45000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC15168194219/POOJA TALWAR/PUNJAB NATIONAL BANK", "toBank": "Punjab National Bank"}], "invoice": null}, {"id": "kishan-kumar", "name": "Kishan Kumar", "bucket": "team", "tag": "Team", "cadence": "monthly-stopped", "sentence": "About ₹36,266 most months, then stopped after Dec 2025", "n": 7, "total": 231018.0, "first": "2025-04-30", "last": "2025-12-20", "months": [34000.0, 34000.0, 41000.0, 38532.0, 0.0, 77064.0, 0.0, 0.0, 6422.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 7, "total": 231018.0}}, "cal": {"2025": {"n": 7, "total": 231018.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 7, "total": 231018.0}], "payments": [{"date": "2025-12-20", "amount": 6422.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kishan/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-30", "amount": 38532.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kishan/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-01", "amount": 38532.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kishan/TPARTY TRANSFER", "toBank": null}, {"date": "2025-07-31", "amount": 38532.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kishan/TPARTY TRANSFER", "toBank": null}, {"date": "2025-06-30", "amount": 41000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kishan/TPARTY TRANSFER", "toBank": null}, {"date": "2025-05-02", "amount": 34000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Kishan/TPARTY TRANSFER", "toBank": null}, {"date": "2025-04-30", "amount": 34000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12039389764/Kishan Kumar/INDIAN BANK", "toBank": "Indian Bank"}], "invoice": null}, {"id": "snehal-tyagi", "name": "Snehal Tyagi", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹18,000 every month since Sep 2025", "n": 12, "total": 216200.0, "first": "2025-09-30", "last": "2026-09-30", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 14500.0, 15700.0, 15000.0, 18000.0, 18000.0, 18000.0, 18000.0, 0.0, 18000.0, 18000.0, 18000.0, 18000.0, 27000.0], "fy": {"2025-26": {"n": 7, "total": 117200.0}, "2026-27": {"n": 5, "total": 99000.0}}, "cal": {"2025": {"n": 4, "total": 63200.0}, "2026": {"n": 8, "total": 153000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 12, "total": 216200.0}], "payments": [{"date": "2026-09-30", "amount": 27000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2026-02-28", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-30", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2025-11-30", "amount": 15000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2025-10-31", "amount": 15700.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-30", "amount": 14500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SNEHAL TYAGI/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "chhavi-handa", "name": "Chhavi Handa", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹33,000 every month since May 2026", "n": 5, "total": 159000.0, "first": "2026-05-31", "last": "2026-09-30", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 30000.0, 30000.0, 33000.0, 33000.0, 33000.0], "fy": {"2026-27": {"n": 5, "total": 159000.0}}, "cal": {"2026": {"n": 5, "total": 159000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 5, "total": 159000.0}], "payments": [{"date": "2026-09-30", "amount": 33000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH27329148048/CHHAVI HANDA/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-08-31", "amount": 33000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH24389219364/CHHAVI HANDA/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-07-31", "amount": 33000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH21221121366/CHHAVI HANDA/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-06-30", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH18161681328/CHHAVI HANDA/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}, {"date": "2026-05-31", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH15104714419/CHHAVI HANDA/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}], "invoice": null}, {"id": "kg-sharma-co", "name": "KG Sharma & Co", "bucket": "vendor", "tag": "Professional", "cadence": "irregular", "sentence": "2 payments, no fixed cycle — ₹1,08,000 and ₹50,000", "n": 2, "total": 158000.0, "first": "2025-12-11", "last": "2026-06-12", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 108000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50000.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 108000.0}, "2026-27": {"n": 1, "total": 50000.0}}, "cal": {"2025": {"n": 1, "total": 108000.0}, "2026": {"n": 1, "total": 50000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 2, "total": 158000.0}], "payments": [{"date": "2026-06-12", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH16308136450/KG SHARMA AND CO/INDIAN BANK", "toBank": "Indian Bank"}, {"date": "2025-12-11", "amount": 108000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC34554013460/KG SHARMA AND CO/INDIAN BANK", "toBank": "Indian Bank"}], "invoice": {"date": "2026-10-15", "number": "202/2026-27", "forYearEnded": "31 Mar 2026", "professional": 110000, "gst": 19800, "total": 129800, "note": "Tax invoice emailed on 15 Oct 2026 for the year ended 31 Mar 2026. It is not a debit on the statements through 30 Sep 2026. October’s statement is not out yet, so this bill may still be unpaid."}}, {"id": "sumit-singh", "name": "Sumit Singh", "bucket": "team", "tag": "Team", "cadence": "monthly-stopped", "sentence": "About ₹17,710 most months, then stopped after Jun 2026", "n": 8, "total": 146737.0, "first": "2025-09-30", "last": "2026-06-12", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 14500.0, 15700.0, 15000.0, 17420.0, 18580.0, 18000.0, 18000.0, 0.0, 0.0, 29537.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 7, "total": 117200.0}, "2026-27": {"n": 1, "total": 29537.0}}, "cal": {"2025": {"n": 4, "total": 62620.0}, "2026": {"n": 4, "total": 84117.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 8, "total": 146737.0}], "payments": [{"date": "2026-06-12", "amount": 29537.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SUMIT SINGH/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SUMIT SINGH/TPARTY TRANSFER", "toBank": null}, {"date": "2026-02-28", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SUMIT SINGH/TPARTY TRANSFER", "toBank": null}, {"date": "2026-01-30", "amount": 18580.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SUMIT SINGH/TPARTY TRANSFER", "toBank": null}, {"date": "2025-12-31", "amount": 17420.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SUMIT SINGH/TPARTY TRANSFER", "toBank": null}, {"date": "2025-11-30", "amount": 15000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SUMIT SINGH/TPARTY TRANSFER", "toBank": null}, {"date": "2025-10-31", "amount": 15700.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SUMIT SINGH/TPARTY TRANSFER", "toBank": null}, {"date": "2025-09-30", "amount": 14500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/SUMIT SINGH/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "akash-solanki", "name": "Akash Solanki", "bucket": "team", "tag": "Team", "cadence": "every-2-stopped", "sentence": "About ₹50,940 every 2 months, then stopped after Aug 2025", "n": 3, "total": 146337.0, "first": "2025-04-30", "last": "2025-08-22", "months": [50940.0, 0.0, 50940.0, 0.0, 44457.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 3, "total": 146337.0}}, "cal": {"2025": {"n": 3, "total": 146337.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 3, "total": 146337.0}], "payments": [{"date": "2025-08-22", "amount": 44457.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Akash solanki/TPARTY TRANSFER", "toBank": null}, {"date": "2025-06-30", "amount": 50940.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Akash solanki/TPARTY TRANSFER", "toBank": null}, {"date": "2025-04-30", "amount": 50940.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12039413109/Akash/CANAR A BANK", "toBank": "Canar A Bank"}], "invoice": null}, {"id": "ritika-jain", "name": "Ritika Jain", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹23,750 every month since Mar 2026", "n": 8, "total": 145500.0, "first": "2026-03-01", "last": "2026-09-30", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 35500.0, 30000.0, 17500.0, 17500.0, 0.0, 35000.0, 10000.0], "fy": {"2025-26": {"n": 2, "total": 35500.0}, "2026-27": {"n": 6, "total": 110000.0}}, "cal": {"2026": {"n": 8, "total": 145500.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 8, "total": 145500.0}], "payments": [{"date": "2026-09-30", "amount": 10000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH27329147012/RITIKA JAIN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-08-31", "amount": 17500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH24389217526/RITIKA JAIN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-08-01", "amount": 17500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "BETWEEN 01/08/2026 AND 31/08/2026 0 LLP DLF TOWER-8 JASOLA INB/NEFT/AXODH21330651985/RITIKA JAIN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-06-30", "amount": 17500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "BETWEEN 01/06/2026 AND 30/06/2026 INB/NEFT/AXODH18161677285/RITIKA JAIN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-05-31", "amount": 17500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH15105302960/RITIKA JAIN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-04-16", "amount": 30000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH10623465434/RITIKA JAIN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-03-31", "amount": 17500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH09097282203/RITIKA JAIN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-03-01", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH06044655764/RITIKA JAIN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}], "invoice": null}, {"id": "unnamed-transfer", "name": "Unnamed transfer", "bucket": "internal", "tag": "No payee name", "cadence": "cluster", "sentence": "₹1,45,414 across 7 payments, all in Jan 2026", "n": 7, "total": 145414.0, "first": "2026-01-05", "last": "2026-01-23", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 145414.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 7, "total": 145414.0}}, "cal": {"2026": {"n": 7, "total": 145414.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 7, "total": 145414.0}], "payments": [{"date": "2026-01-23", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/933056555//NA", "toBank": null}, {"date": "2026-01-20", "amount": 10000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/932660577//NA", "toBank": null}, {"date": "2026-01-20", "amount": 2582.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/932659572//NA", "toBank": null}, {"date": "2026-01-20", "amount": 2832.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/932657805//NA", "toBank": null}, {"date": "2026-01-20", "amount": 99000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/932608573//NA", "toBank": null}, {"date": "2026-01-20", "amount": 1000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/932600161//NA", "toBank": null}, {"date": "2026-01-05", "amount": 10000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/930052010//NA", "toBank": null}], "invoice": null}, {"id": "dharamraj", "name": "Dharamraj", "bucket": "team", "tag": "Team", "cadence": "monthly", "sentence": "About ₹18,000 every month since Mar 2026", "n": 7, "total": 128400.0, "first": "2026-03-01", "last": "2026-09-30", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 36000.0, 0.0, 18000.0, 18000.0, 18000.0, 18000.0, 20400.0], "fy": {"2025-26": {"n": 2, "total": 36000.0}, "2026-27": {"n": 5, "total": 92400.0}}, "cal": {"2026": {"n": 7, "total": 128400.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 7, "total": 128400.0}], "payments": [{"date": "2026-09-30", "amount": 20400.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Dharamraj/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Dharamraj/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Dharamraj/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Dharamraj/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Dharamraj/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-31", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Dharamraj/TPARTY TRANSFER", "toBank": null}, {"date": "2026-03-01", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Dharamraj/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "cash-self", "name": "Cash · self", "bucket": "cash", "tag": "Cash", "cadence": "irregular", "sentence": "3 payments, no fixed cycle — usually ₹35,000 each", "n": 3, "total": 100000.0, "first": "2025-07-30", "last": "2026-06-30", "months": [0.0, 0.0, 0.0, 50000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50000.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 2, "total": 50000.0}, "2026-27": {"n": 1, "total": 50000.0}}, "cal": {"2025": {"n": 2, "total": 50000.0}, "2026": {"n": 1, "total": 50000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 3, "total": 100000.0}], "payments": [{"date": "2026-06-30", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH 2173 WDL/SAK485715683/4390/STELLAR I/SELF", "toBank": null}, {"date": "2025-07-30", "amount": 35000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK449762503/4682/SELF", "toBank": null}, {"date": "2025-07-30", "amount": 15000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK449763158/4682/SELF", "toBank": null}], "invoice": null}, {"id": "cash-subha", "name": "Cash · Subha", "bucket": "cash", "tag": "Cash", "cadence": "cluster", "sentence": "₹1,00,000 across 2 payments, all in Sep 2025", "n": 2, "total": 100000.0, "first": "2025-09-01", "last": "2025-09-20", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 100000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 2, "total": 100000.0}}, "cal": {"2025": {"n": 2, "total": 100000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 2, "total": 100000.0}], "payments": [{"date": "2025-09-20", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK455478952/4390/STELLAR I/BY SUBHA", "toBank": null}, {"date": "2025-09-01", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK453269529/4390/STELLAR I/BY SUBHA", "toBank": null}], "invoice": null}, {"id": "amit-kumar", "name": "Amit Kumar", "bucket": "other", "tag": "Other person", "cadence": "monthly", "sentence": "About ₹20,000 every month since May 2026", "n": 5, "total": 96935.0, "first": "2026-05-31", "last": "2026-09-30", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 15000.0, 20000.0, 21290.0, 20645.0, 20000.0], "fy": {"2026-27": {"n": 5, "total": 96935.0}}, "cal": {"2026": {"n": 5, "total": 96935.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 5, "total": 96935.0}], "payments": [{"date": "2026-09-30", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Amitkumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 20645.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Amitkumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 21290.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Amitkumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Amitkumar/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 15000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Amitkumar/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "annu-agrawal", "name": "Annu Agrawal", "bucket": "team", "tag": "Team", "cadence": "irregular", "sentence": "6 payments, no fixed cycle — usually ₹15,850 each", "n": 6, "total": 95700.0, "first": "2025-04-01", "last": "2025-07-31", "months": [32000.0, 33000.0, 0.0, 30700.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 6, "total": 95700.0}}, "cal": {"2025": {"n": 6, "total": 95700.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 6, "total": 95700.0}], "payments": [{"date": "2025-07-31", "amount": 15700.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Annu/TPARTY TRANSFER", "toBank": null}, {"date": "2025-07-01", "amount": 15000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Annu/TPARTY TRANSFER", "toBank": null}, {"date": "2025-05-30", "amount": 18000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC15060574619/ANNU AGRAWAL/HDFC BANK", "toBank": "Hdfc Bank"}, {"date": "2025-05-01", "amount": 15000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC12145717433/ANNU AGRAWAL/HDFC BANK", "toBank": "Hdfc Bank"}, {"date": "2025-04-02", "amount": 16000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC09204919538/ANNU AGRAWAL/HDFC BANK", "toBank": "Hdfc Bank"}, {"date": "2025-04-01", "amount": 16000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "LLP DLF TOWER-8 JASOLA DELHI FOR MCA REGISTERED ENTITIES of Account No :924020022488760 for the period INB/NEFT/AXOIC09199239162/Annu Agarwal/HDFC BANK", "toBank": "Hdfc Bank"}], "invoice": null}, {"id": "umrafi", "name": "Umrafi", "bucket": "other", "tag": "Other person", "cadence": "monthly", "sentence": "About ₹20,000 every month since May 2026", "n": 5, "total": 95646.0, "first": "2026-05-31", "last": "2026-09-30", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 15000.0, 20000.0, 20000.0, 20646.0, 20000.0], "fy": {"2026-27": {"n": 5, "total": 95646.0}}, "cal": {"2026": {"n": 5, "total": 95646.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 5, "total": 95646.0}], "payments": [{"date": "2026-09-30", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Umrafi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-08-31", "amount": 20646.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Umrafi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-07-31", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Umrafi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-06-30", "amount": 20000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Umrafi/TPARTY TRANSFER", "toBank": null}, {"date": "2026-05-31", "amount": 15000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Umrafi/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "interloop", "name": "Interloop", "bucket": "vendor", "tag": "Vendor", "cadence": "irregular", "sentence": "5 payments, no fixed cycle — usually ₹17,280 each", "n": 5, "total": 75391.0, "first": "2025-12-11", "last": "2026-03-12", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 53810.0, 2398.0, 0.0, 19183.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 5, "total": 75391.0}}, "cal": {"2025": {"n": 2, "total": 53810.0}, "2026": {"n": 3, "total": 21581.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 5, "total": 75391.0}], "payments": [{"date": "2026-03-12", "amount": 1903.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH07136640450/INTERLOOP PRIVATE LIM/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-03-12", "amount": 17280.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH07136628981/INTERLOOP PRIVATE LIM/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2026-01-28", "amount": 2398.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "NEFT/DH/AXODH02854537498/INTERLOOP PRIVATE LIMITED/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-12-12", "amount": 27890.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC34662942465/INTERLOOP PRIVATE LIM/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}, {"date": "2025-12-11", "amount": 25920.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC34555085206/INTERLOOP PRIVATE LIM/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}], "invoice": null}, {"id": "idrish", "name": "Idrish", "bucket": "other", "tag": "Other person", "cadence": "once", "sentence": "₹70,000 once (Dec 2025)", "n": 1, "total": 70000.0, "first": "2025-12-01", "last": "2025-12-01", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 70000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 70000.0}}, "cal": {"2025": {"n": 1, "total": 70000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 70000.0}], "payments": [{"date": "2025-12-01", "amount": 70000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/Idrish/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "lalit-kumar-asnani", "name": "Lalit Kumar Asnani", "bucket": "other", "tag": "Other person", "cadence": "once", "sentence": "₹58,000 once (Sep 2026)", "n": 1, "total": 58000.0, "first": "2026-09-09", "last": "2026-09-09", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 58000.0], "fy": {"2026-27": {"n": 1, "total": 58000.0}}, "cal": {"2026": {"n": 1, "total": 58000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 58000.0}], "payments": [{"date": "2026-09-09", "amount": 58000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH25261141911/LALIT KUMAR ASNANI HU/IDFC FIRST BANK LTD", "toBank": "Idfc First Bank Ltd"}], "invoice": null}, {"id": "cash-subhas", "name": "Cash · Subhas", "bucket": "cash", "tag": "Cash", "cadence": "once", "sentence": "₹50,000 once (Apr 2025)", "n": 1, "total": 50000.0, "first": "2025-04-03", "last": "2025-04-03", "months": [50000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 50000.0}}, "cal": {"2025": {"n": 1, "total": 50000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 50000.0}], "payments": [{"date": "2025-04-03", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK435727177/4682/BY SUBHAS", "toBank": null}], "invoice": null}, {"id": "cash-s-g-g", "name": "Cash · S G G", "bucket": "cash", "tag": "Cash", "cadence": "once", "sentence": "₹50,000 once (Oct 2025)", "n": 1, "total": 50000.0, "first": "2025-10-14", "last": "2025-10-14", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 50000.0}}, "cal": {"2025": {"n": 1, "total": 50000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 50000.0}], "payments": [{"date": "2025-10-14", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK458108863/4390/STELLAR I/BY S G G", "toBank": null}], "invoice": null}, {"id": "cash-s-c", "name": "Cash · S C", "bucket": "cash", "tag": "Cash", "cadence": "once", "sentence": "₹50,000 once (May 2026)", "n": 1, "total": 50000.0, "first": "2026-05-26", "last": "2026-05-26", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50000.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2026-27": {"n": 1, "total": 50000.0}}, "cal": {"2026": {"n": 1, "total": 50000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 50000.0}], "payments": [{"date": "2026-05-26", "amount": 50000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK482225250/4390/STELLAR I/S C 2171 GANG", "toBank": null}], "invoice": null}, {"id": "municipal-corporation-of-delhi", "name": "Municipal Corporation of Delhi", "bucket": "vendor", "tag": "Civic", "cadence": "once", "sentence": "₹48,402 once (Sep 2025)", "n": 1, "total": 48402.0, "first": "2025-09-22", "last": "2025-09-22", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 48402.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 48402.0}}, "cal": {"2025": {"n": 1, "total": 48402.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 48402.0}], "payments": [{"date": "2025-09-22", "amount": 48402.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/869077944/MUNICIPAL CORPORATION OF DELHI(EASY", "toBank": null}], "invoice": null}, {"id": "lali-automobiles", "name": "Lali Automobiles", "bucket": "vendor", "tag": "Vendor", "cadence": "once", "sentence": "₹38,653 once (Jan 2026)", "n": 1, "total": 38653.0, "first": "2026-01-10", "last": "2026-01-10", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 38653.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 38653.0}}, "cal": {"2026": {"n": 1, "total": 38653.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 38653.0}], "payments": [{"date": "2026-01-10", "amount": 38653.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "NEFT/DH/AXODH01008084120/Lali automobiles/KOTAK MAHINDRA BANK", "toBank": "Kotak Mahindra Bank"}], "invoice": null}, {"id": "cash-anita", "name": "Cash · Anita", "bucket": "cash", "tag": "Cash", "cadence": "once", "sentence": "₹35,000 once (May 2025)", "n": 1, "total": 35000.0, "first": "2025-05-26", "last": "2025-05-26", "months": [0.0, 35000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 35000.0}}, "cal": {"2025": {"n": 1, "total": 35000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 35000.0}], "payments": [{"date": "2025-05-26", "amount": 35000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "SAK/CASH WDL/SAK442113608/4682/BY ANITA", "toBank": null}], "invoice": null}, {"id": "btb-venture", "name": "BTB Venture", "bucket": "vendor", "tag": "Vendor", "cadence": "once", "sentence": "₹34,344 once (Apr 2025)", "n": 1, "total": 34344.0, "first": "2025-04-16", "last": "2025-04-16", "months": [34344.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 34344.0}}, "cal": {"2025": {"n": 1, "total": 34344.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 34344.0}], "payments": [{"date": "2025-04-16", "amount": 34344.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/IFT/BTB VENTURE/TPARTY TRANSFER", "toBank": null}], "invoice": null}, {"id": "shining-stars-consult", "name": "Shining Stars Consult", "bucket": "vendor", "tag": "Vendor", "cadence": "once", "sentence": "₹32,387 once (Mar 2026)", "n": 1, "total": 32387.0, "first": "2026-03-23", "last": "2026-03-23", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 32387.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 32387.0}}, "cal": {"2026": {"n": 1, "total": 32387.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 32387.0}], "payments": [{"date": "2026-03-23", "amount": 32387.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH08231164070/SHINING STARS CONSULT/CANARA BANK", "toBank": "Canara Bank"}], "invoice": null}, {"id": "kamal-singh-negi", "name": "Kamal Singh Negi", "bucket": "other", "tag": "Other person", "cadence": "once", "sentence": "₹32,000 once (Mar 2026)", "n": 1, "total": 32000.0, "first": "2026-03-19", "last": "2026-03-19", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 32000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 32000.0}}, "cal": {"2026": {"n": 1, "total": 32000.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 32000.0}], "payments": [{"date": "2026-03-19", "amount": 32000.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH07899328474/kamal singh negi/PUNJAB NATIONAL BANK", "toBank": "Punjab National Bank"}], "invoice": null}, {"id": "priyanka-jain", "name": "Priyanka Jain", "bucket": "other", "tag": "Other person", "cadence": "once", "sentence": "₹31,500 once (Jun 2025)", "n": 1, "total": 31500.0, "first": "2025-06-27", "last": "2025-06-27", "months": [0.0, 0.0, 31500.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 31500.0}}, "cal": {"2025": {"n": 1, "total": 31500.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 31500.0}], "payments": [{"date": "2025-06-27", "amount": 31500.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC17859272600/PRIYANKA JAIN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}], "invoice": null}, {"id": "policybazaar", "name": "Policybazaar", "bucket": "vendor", "tag": "Insurance", "cadence": "once", "sentence": "₹17,419 once (Feb 2026)", "n": 1, "total": 17419.0, "first": "2026-02-24", "last": "2026-02-24", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 17419.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 17419.0}}, "cal": {"2026": {"n": 1, "total": 17419.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 17419.0}], "payments": [{"date": "2026-02-24", "amount": 17419.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/940335663/POLICY BAZAAR INSURANCE BROKER(CCAV", "toBank": null}], "invoice": null}, {"id": "zimyo-consulting", "name": "Zimyo Consulting", "bucket": "vendor", "tag": "Software", "cadence": "once", "sentence": "₹12,960 once (May 2025)", "n": 1, "total": 12960.0, "first": "2025-05-28", "last": "2025-05-28", "months": [0.0, 12960.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 12960.0}}, "cal": {"2025": {"n": 1, "total": 12960.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 12960.0}], "payments": [{"date": "2025-05-28", "amount": 12960.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC14846425057/Zimyo consulting priv/DBS BANK INDIA LIMIT", "toBank": "Dbs Bank India Limit"}], "invoice": null}, {"id": "mushki-qamar", "name": "Mushki Qamar", "bucket": "other", "tag": "Other person", "cadence": "once", "sentence": "₹10,667 once (Apr 2025)", "n": 1, "total": 10667.0, "first": "2025-04-07", "last": "2025-04-07", "months": [10667.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2025-26": {"n": 1, "total": 10667.0}}, "cal": {"2025": {"n": 1, "total": 10667.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 10667.0}], "payments": [{"date": "2025-04-07", "amount": 10667.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXOIC09745706893/MUSHKI QAMAR/PUNJAB NATIONAL BANK", "toBank": "Punjab National Bank"}], "invoice": null}, {"id": "icici-medical-insurance", "name": "ICICI Medical Insurance", "bucket": "vendor", "tag": "Insurance", "cadence": "once", "sentence": "₹3,025 once (Apr 2026)", "n": 1, "total": 3025.0, "first": "2026-04-14", "last": "2026-04-14", "months": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3025.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fy": {"2026-27": {"n": 1, "total": 3025.0}}, "cal": {"2026": {"n": 1, "total": 3025.0}}, "accounts": [{"short": "Axis XX8760", "label": "Axis company CA XX8760", "n": 1, "total": 3025.0}], "payments": [{"date": "2026-04-14", "amount": 3025.0, "account": "Axis company CA XX8760", "accountShort": "Axis XX8760", "narration": "INB/NEFT/AXODH10405273669/ICICI MEDICAL INSURAN/ICICI BANK LIMITED", "toBank": "Icici Bank Limited"}], "invoice": null}], "gaps": ["Axis personal account XX6536 is in the mailbox but still locked, so nothing from that account is included.", "SBI is still locked.", "Standard Chartered 22911607133 was closed on 12 May 2026 and is not in these lines.", "Statements run through 30 Sep 2026. October 2026 has not been issued yet."], "emailBills": [{"name": "Airtel Black", "cadence": "Every month", "amount": "₹3,700–3,900", "note": "Bills in email. Not a debit on Axis XX8760."}, {"name": "Slack (3 users)", "cadence": "Every month", "amount": "₹884", "note": "Workspace plan. Not on Axis XX8760."}, {"name": "IGL Gas", "cadence": "Recurring", "amount": "Amount varies", "note": "BP 5000004664. Not on Axis XX8760."}, {"name": "Eleven Labs", "cadence": "Recurring", "amount": "Amount varies", "note": "Receipts in email. Not on Axis XX8760."}]}</script>
 <script>
 const DATA = JSON.parse(document.getElementById("data").textContent);
-const inr = n => "₹" + Math.round(n).toLocaleString("en-IN");
-const qel = document.getElementById("q");
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const listEl = document.getElementById("list");
+const viewEl = document.getElementById("view");
+const detailEl = document.getElementById("detail");
+const qEl = document.getElementById("q");
+const BILLS = new Set(["DLF Tower B","KG Sharma & Co","Policybazaar","Municipal Corporation of Delhi","Zimyo Consulting","CBDT (income tax)","ICICI Lombard","ICICI Medical Insurance"]);
+const CADENCE = [
+  ["monthly", "Every month"],
+  ["most-months", "Most months"],
+  ["every-2-months", "Every 2 months"],
+  ["every-2-stopped", "Every 2 months, then stopped"],
+  ["every-3-months", "Every 3 months"],
+  ["every-3-stopped", "Every 3 months, then stopped"],
+  ["several-a-month", "Several times a month"],
+  ["monthly-stopped", "Monthly, then stopped"],
+  ["cluster", "A cluster, not a cycle"],
+  ["once", "Once"],
+  ["irregular", "No fixed cycle"],
+];
+const BUCKETS = [
+  ["team", "Team", "#1f4d3a"],
+  ["family", "Family", "#8c3a1e"],
+  ["vendor", "Vendors", "#1e3a5f"],
+  ["tax", "Tax", "#8a6a2f"],
+  ["cash", "Cash", "#6b645c"],
+  ["internal", "Moved inside", "#3e5348"],
+  ["other", "Other people", "#6b4a62"],
+];
+const CADENCE_LABEL = Object.fromEntries(CADENCE);
 let tab = "payees";
+let chip = "all";
+let focusBucket = null;
+let selected = null;
 
-document.getElementById("subhead").textContent =
-  DATA.account + " · " + DATA.period + " · " + inr(DATA.totalOut) + " paid out";
-
-const order = ["team","family","vendor","tax","cash","internal","other"];
-const labels = {
-  team: "Team", family: "Family & own", vendor: "Vendors", tax: "Tax",
-  cash: "Cash", internal: "No name", other: "Other people"
-};
-document.getElementById("cards").innerHTML = order.map(k => `
-  <div class="card"><div class="k">${labels[k]}</div><div class="v">${inr(DATA.buckets[k]||0)}</div></div>
-`).join("") + `<div class="card"><div class="k">All outflows</div><div class="v">${inr(DATA.totalOut)}</div></div>`;
-
-function dots(months) {
-  const cells = months.map((v,i) => `<i class="${v?"on":""}" title="${DATA.months[i]} ${v?inr(v):"—"}"></i>`).join("");
-  const labs = DATA.months.map(m => `<span>${m}</span>`).join("");
-  return `<div class="dots" style="margin-top:0.45rem">${cells}</div><div class="dotrow">${labs}</div>`;
+function money(n) {
+  const v = Math.abs(Number(n) || 0);
+  const whole = Math.round(v);
+  if (Math.abs(v - whole) < 0.001) return "₹" + whole.toLocaleString("en-IN");
+  const parts = v.toFixed(2).split(".");
+  return "₹" + Number(parts[0]).toLocaleString("en-IN") + "." + parts[1];
 }
-
-function rowHTML(r, max) {
-  const share = max ? Math.round(100 * r.total / max) : 0;
-  return `<article class="row">
-    <div>
-      <div class="name">${r.name}<span class="tag ${r.bucket}">${r.tag}</span></div>
-      <div class="sent">${r.sentence}</div>
-      <div class="meta">${r.n} payment${r.n==1?"":"s"} · ${r.first} to ${r.last}</div>
-      ${dots(r.months)}
-      ${max ? `<div class="bar"><b style="width:${Math.max(share,2)}%"></b></div>` : ""}
-    </div>
-    <div class="amt">${inr(r.total)}</div>
-  </article>`;
+function esc(s) {
+  return String(s == null ? "" : s)
+    .replace(/\u0026/g, "\u0026amp;")
+    .replace(/\u003c/g, "\u0026lt;")
+    .replace(/\u003e/g, "\u0026gt;")
+    .replace(/\u0022/g, "\u0026quot;");
 }
-
-function match(r) {
-  const q = qel.value.trim().toLowerCase();
-  return !q || r.name.toLowerCase().includes(q) || r.tag.toLowerCase().includes(q) || r.sentence.toLowerCase().includes(q);
+function dmy(iso) {
+  const [y, m, d] = iso.split("-");
+  return (+d) + " " + MONTHS[+m - 1] + " " + y;
 }
-
-function section(title, blurb, list, max) {
-  if (!list.length) {
-    return `<h2>${title}</h2><p class="empty">${blurb}</p>`;
-  }
-  return `<h2>${title}</h2><p class="sub">${blurb}</p>` + list.map(r => rowHTML(r, max)).join("");
+function monyr(iso) {
+  const [y, m] = iso.split("-");
+  return MONTHS[+m - 1] + " " + y;
 }
+function initials(name) {
+  const words = String(name).replace(/\(.*?\)/g, "").split(/[^A-Za-z0-9]+/).filter(Boolean);
+  return ((words[0] || "?").slice(0, 1) + (words[1] || "").slice(0, 1)).toUpperCase();
+}
+function emails() {
+  return DATA.emailBills.map(b => ({
+    id: "email-" + b.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+    name: b.name,
+    sentence: b.cadence + " · not on this account",
+    tag: "Email bill",
+    bucket: "vendor",
+    email: true,
+    amountLabel: b.amount,
+    cadenceLabel: b.cadence,
+    note: b.note
+  }));
+}
+function countTab(id) {
+  if (id === "payees") return DATA.rows.filter(r => ["team","family","other","cash"].includes(r.bucket)).length;
+  if (id === "vendors") return DATA.rows.filter(r => r.bucket === "vendor" || r.bucket === "tax").length;
+  if (id === "bills") return DATA.rows.filter(r => BILLS.has(r.name) || r.invoice).length + DATA.emailBills.length;
+  return DATA.rows.filter(r => r.bucket === "internal").length;
+}
+document.getElementById("brandtotal").textContent = money(DATA.totalOut);
+document.getElementById("brandsub").textContent = DATA.account + " · " + DATA.period;
+document.getElementById("tabs").innerHTML = [
+  ["payees", "Payees"],
+  ["vendors", "Vendors"],
+  ["bills", "Bills"],
+  ["moved", "Moved"]
+].map(([id, label]) => `<button type="button" data-tab="${id}">${label}<span>${countTab(id)}</span></button>`).join("");
 
-function render() {
-  const rows = DATA.rows.filter(match);
-  const view = document.getElementById("view");
-  if (tab === "vendors") {
-    const vendors = rows.filter(r => r.bucket === "vendor" || r.bucket === "tax");
-    const rest = rows.filter(r => r.bucket === "internal");
-    const max = Math.max(...DATA.rows.filter(r => r.bucket==="vendor"||r.bucket==="tax").map(r=>r.total), 1);
-    view.innerHTML =
-      section("Companies", "Sorted by what left the account. The bar is their share of the biggest vendor.", vendors, max)
-      + section("Left the account with no company and no person", "These debits have no payee name on the statement, so they are not a vendor.", rest, null);
-  } else if (tab === "payees") {
-    const people = rows.filter(r => ["team","family","other","cash"].includes(r.bucket));
-    const by = code => people.filter(r => r.cadence === code);
-    view.innerHTML =
-      section("Every month", "Paid in nearly every month of the run.", by("monthly"), null)
-      + section("Most months, not every month", "A regular amount, with months skipped.", by("most-months"), null)
-      + section("Every 2 months", "Payments land about every second month.", by("every-2-months"), null)
-      + section("Every 3 months", "Nobody on this account was paid on a steady 3-month cycle in this year.", by("every-3-months"), null)
-      + section("Once this year", "A single payment. It may be a yearly bill, or it may never happen again. One year is not enough to tell.", by("once"), null)
-      + section("Several times a month", "More than one debit in a typical month.", by("several-a-month"), null)
-      + section("Was regular, then stopped", "A monthly pattern that ended before March 2026.", by("monthly-stopped"), null)
-      + section("A cluster, not a cycle", "More than one payment, but all inside a single month.", by("cluster"), null)
-      + section("No fixed cycle", "Repeated, but not monthly, quarterly, or yearly.", by("irregular"), null);
+function pool() {
+  let rows;
+  if (tab === "vendors") rows = DATA.rows.filter(r => r.bucket === "vendor" || r.bucket === "tax");
+  else if (tab === "bills") rows = DATA.rows.filter(r => BILLS.has(r.name) || r.invoice);
+  else if (tab === "moved") rows = DATA.rows.filter(r => r.bucket === "internal");
+  else rows = DATA.rows.filter(r => ["team","family","other","cash"].includes(r.bucket));
+  if (focusBucket) rows = rows.filter(r => r.bucket === focusBucket);
+  return rows;
+}
+function rowBtn(r) {
+  const amt = r.email ? esc(r.amountLabel) : money(r.total);
+  return `<button type="button" class="row${selected === r.id ? " on" : ""}" data-id="${esc(r.id)}">
+    <span class="av" data-b="${esc(r.bucket)}">${esc(initials(r.name))}</span>
+    <span><span class="nm">${esc(r.name)}</span><span class="sent">${esc(r.sentence || "")}</span></span>
+    <span class="amt">${amt}</span>
+  </button>`;
+}
+function paintChips() {
+  const sel = document.getElementById("cadence");
+  if (tab !== "payees" || qEl.value.trim()) { sel.hidden = true; return; }
+  sel.hidden = false;
+  const rows = pool();
+  const counts = {};
+  rows.forEach(r => { counts[r.cadence] = (counts[r.cadence] || 0) + 1; });
+  const items = [["all", "All rhythms"]].concat(CADENCE.filter(([id]) => counts[id]));
+  const html = items.map(([id, label]) => `<option value="${id}">${esc(label)}${id === "all" ? "" : " · " + counts[id]}</option>`).join("");
+  if (sel.dataset.sig !== html) { sel.dataset.sig = html; sel.innerHTML = html; }
+  if (sel.value !== chip) sel.value = chip;
+}
+function paintList() {
+  const top = listEl.scrollTop;
+  paintChips();
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+  const q = qEl.value.trim().toLowerCase();
+  let html = "";
+  if (q) {
+    const rows = DATA.rows.filter(r => (r.name + " " + r.sentence + " " + r.tag).toLowerCase().includes(q));
+    const em = emails().filter(r => (r.name + " " + r.note).toLowerCase().includes(q));
+    const all = rows.concat(em);
+    html = all.length ? `<div class="group">Matches</div>` + all.map(rowBtn).join("") : `<p class="empty">No name matches.</p>`;
   } else {
-    const billNames = Object.keys(DATA.bills);
-    const standing = rows.filter(r => DATA.bills[r.name] && DATA.bills[r.name].when === "Every month");
-    const maybeYear = rows.filter(r => DATA.bills[r.name] && DATA.bills[r.name].when === "Once this year");
-    const tax = rows.filter(r => DATA.bills[r.name] && DATA.bills[r.name].when.startsWith("Several"));
-    const notes = (list) => list.map(r => {
-      const b = DATA.bills[r.name];
-      return rowHTML({...r, sentence: r.sentence + " — " + b.note, tag: b.kind}, null);
-    }).join("");
-    const email = DATA.emailBills.filter(b => {
-      const q = qel.value.trim().toLowerCase();
-      return !q || b.name.toLowerCase().includes(q);
-    }).map(b => `<article class="row"><div><div class="name">${b.name}<span class="tag">Email only</span></div><div class="sent">${b.cadence} · ${b.amount}</div><div class="meta">${b.note}</div></div><div class="amt">${b.amount}</div></article>`).join("");
-    view.innerHTML =
-      `<h2>Every month</h2><p class="sub">A bill that actually posted every month on this account.</p>${notes(standing) || '<p class="empty">None.</p>'}
-       <h2>Once this year — possibly a yearly bill</h2><p class="sub">Only one charge in the statement. Do not budget them as yearly until next year repeats.</p>${notes(maybeYear)}
-       <h2>Tax, not a calendar bill</h2>${notes(tax)}
-       <h2>Bills in email, not on this Axis account</h2><p class="sub">These keep arriving by email. They were not debited from XX8760 in this statement.</p>${email || '<p class="empty">None match.</p>'}`;
+    if (focusBucket) {
+      const label = (BUCKETS.find(b => b[0] === focusBucket) || [, focusBucket])[1];
+      html += `<div class="focusbar">${esc(label)} <button type="button" data-clear>Clear</button></div>`;
+    }
+    if (tab === "payees") {
+      const rows = pool().filter(r => chip === "all" || r.cadence === chip);
+      if (!rows.length) html += `<p class="empty">Nothing in this group.</p>`;
+      else for (const [id, label] of CADENCE) {
+        const group = rows.filter(r => r.cadence === id);
+        if (!group.length) {
+          if (id === "every-3-months" && chip === "all" && !focusBucket) {
+            html += `<div class="group">Every 3 months</div><p class="empty">Nobody was paid on a steady 3-month cycle.</p>`;
+          }
+          continue;
+        }
+        html += `<div class="group">${esc(label)}</div>` + group.map(rowBtn).join("");
+      }
+    } else if (tab === "bills") {
+      html += `<div class="group">On the statement</div>` + pool().map(rowBtn).join("");
+      html += `<div class="group">In email, not on this account</div><p class="railnote">Not inside the ${esc(money(DATA.totalOut))} total.</p>` + emails().map(rowBtn).join("");
+    } else if (tab === "moved") {
+      html += `<p class="railnote">A deposit and transfers with no outside payee. Still inside the total.</p>` + pool().map(rowBtn).join("");
+    } else {
+      html += pool().map(rowBtn).join("") || `<p class="empty">Nothing in this group.</p>`;
+    }
+  }
+  listEl.innerHTML = html;
+  listEl.scrollTop = top;
+  if (selected) {
+    listEl.querySelectorAll("[data-id]").forEach(el => {
+      if (el.dataset.id === selected) el.scrollIntoView({ block: "nearest" });
+    });
   }
 }
-
-document.getElementById("t-vendors").onclick = () => { tab="vendors"; paint(); };
-document.getElementById("t-payees").onclick = () => { tab="payees"; paint(); };
-document.getElementById("t-bills").onclick = () => { tab="bills"; paint(); };
-qel.oninput = render;
-function paint() {
-  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("on"));
-  document.getElementById("t-"+tab).classList.add("on");
-  render();
+function bars(values, labels) {
+  const max = Math.max.apply(null, values.concat([1]));
+  return `<div class="mbars">${values.map((v, i) => {
+    const h = v ? Math.max(6, Math.round(v / max * 40)) : 3;
+    return `<div class="mbar" title="${esc(labels[i] + " " + (v ? money(v) : "none"))}"><i class="${v ? "on" : ""}" style="height:${h}px"></i><span>${esc(labels[i])}</span></div>`;
+  }).join("")}</div>`;
 }
-document.getElementById("foot").textContent =
-  "Source: Axis e-statement for XX8760, 1 Apr 2025 to 31 Mar 2026. Opening " + inr(DATA.opening) +
-  ", credits " + inr(DATA.credits) + ", debits " + inr(DATA.totalOut) + ", closing " + inr(DATA.closing) +
-  ". April 2026 onward is not in this statement. SBI is still locked. Squares are months Apr 2025 through Mar 2026; a filled square means money went out that month.";
-paint();
+function banksOf(r) {
+  const map = new Map();
+  r.payments.forEach(p => { if (p.toBank) map.set(p.toBank, (map.get(p.toBank) || 0) + 1); });
+  return [...map.entries()];
+}
+function payList(r) {
+  return r.payments.map(p => {
+    const to = p.toBank ? `<span class="frombit"><span>To</span> ${esc(p.toBank)}</span>` : "";
+    return `<li class="pay">
+      <time datetime="${esc(p.date)}"><b>${+p.date.slice(8)}</b><span>${esc(monyr(p.date))}</span></time>
+      <div>
+        <div class="paytop">
+          <strong class="payamt">${money(p.amount)}</strong>
+          <span class="frombit"><span>From</span> ${esc(p.accountShort)}</span>
+          ${to}
+        </div>
+        <details><summary>Statement line</summary><p>${esc(p.narration)}</p></details>
+      </div>
+    </li>`;
+  }).join("");
+}
+function showDetail(r) {
+  selected = r.id;
+  history.replaceState(null, "", "#" + r.id);
+  const last = r.fy["2025-26"] || { n: 0, total: 0 };
+  const cur = r.fy["2026-27"] || { n: 0, total: 0 };
+  const c25 = r.cal["2025"] || { n: 0, total: 0 };
+  const c26 = r.cal["2026"] || { n: 0, total: 0 };
+  const banks = banksOf(r);
+  const fromBody = r.accounts.map(a =>
+    `<strong>${esc(a.label)}</strong><span class="sub">${a.n === r.n ? "Every payment left this account." : a.n + " payment" + (a.n === 1 ? "" : "s") + " · " + money(a.total)}</span>`
+  ).join("");
+  const toBody = banks.length
+    ? banks.map(([name, n]) => `<strong>${esc(name)}</strong><span class="sub">${n} payment${n === 1 ? "" : "s"}</span>`).join("")
+    : `<strong>Not on the statement</strong><span class="sub">The narration has no destination bank.</span>`;
+  const inv = r.invoice ? `<aside class="note"><p class="badge">Not on the statement</p><h3>Invoice ${esc(r.invoice.number)} · ${esc(dmy(r.invoice.date))} · ${money(r.invoice.total)}</h3><p>Professional fee ${money(r.invoice.professional)} plus GST ${money(r.invoice.gst)}. ${esc(r.invoice.note)}</p></aside>` : "";
+  const fy1 = r.months.slice(0, 12);
+  const fy2 = r.months.slice(12);
+  viewEl.innerHTML = `
+    <button type="button" class="back" id="back">Back to the list</button>
+    <p class="kicker">${esc(r.tag)} · ${esc(CADENCE_LABEL[r.cadence] || r.cadence)} · ${r.n} payment${r.n === 1 ? "" : "s"}</p>
+    <h2>${esc(r.name)}</h2>
+    <p class="lead">${esc(r.sentence)}.</p>
+    <section class="hero">
+      <div class="hero-row">
+        <div>
+          <p class="kicker">All paid</p>
+          <p class="when">${esc(dmy(r.first))} – ${esc(dmy(r.last))}</p>
+        </div>
+        <strong>${money(r.total)}</strong>
+      </div>
+      <div class="splitbar">
+        ${last.total ? `<i class="last" style="flex:${last.total}"></i>` : ""}
+        ${cur.total ? `<i class="now" style="flex:${cur.total}"></i>` : ""}
+        ${!last.total && !cur.total ? `<i class="last" style="flex:1;opacity:.3"></i>` : ""}
+      </div>
+      <div class="splitlab">
+        <p class="last"><b>Last year · FY 2025–26</b><strong>${money(last.total)}</strong><br>${last.n ? last.n + " payment" + (last.n === 1 ? "" : "s") + " · Apr 2025 – Mar 2026" : "No payment in that year"}</p>
+        <p class="now"><b>This year · FY 2026–27 so far</b><strong>${money(cur.total)}</strong><br>${cur.n ? cur.n + " payment" + (cur.n === 1 ? "" : "s") + " · Apr–Sep 2026" : "No payment through Sep 2026"}</p>
+      </div>
+      <p class="cal">Calendar 2025 ${money(c25.total)} · Calendar 2026 ${money(c26.total)}.</p>
+    </section>
+    ${inv}
+    <div class="from">
+      <article><p class="k">From account</p>${fromBody}</article>
+      <article><p class="k">To</p>${toBody}</article>
+    </div>
+    <h3 class="sec">Each payment · newest first</h3>
+    <ol class="pays">${payList(r)}</ol>
+    <div class="years">
+      <article class="year"><p class="k">FY 2025–26 by month</p><em>${last.n ? last.n + " payment" + (last.n === 1 ? "" : "s") : "Nothing paid"}</em>${bars(fy1, DATA.monthLabels.slice(0, 12))}</article>
+      <article class="year nowish"><p class="k">FY 2026–27 by month</p><em>${cur.n ? cur.n + " payment" + (cur.n === 1 ? "" : "s") + " · through Sep" : "Nothing through Sep 2026"}</em>${bars(fy2, DATA.monthLabels.slice(12))}</article>
+    </div>
+    <p class="foot">Only ${esc(DATA.account)}. Statements run through 30 Sep 2026.</p>`;
+  detailEl.classList.add("show");
+  paintList();
+  if (window.innerWidth <= 860) detailEl.scrollTop = 0;
+  else detailEl.scrollTop = 0;
+}
+function showEmail(b) {
+  selected = b.id;
+  history.replaceState(null, "", "#" + b.id);
+  viewEl.innerHTML = `
+    <button type="button" class="back" id="back">Back to the list</button>
+    <p class="kicker">Email bill · not on this account</p>
+    <h2>${esc(b.name)}</h2>
+    <p class="lead">${esc(b.cadenceLabel)} · ${esc(b.amountLabel)}.</p>
+    <aside class="note"><p class="badge">Not in the total</p><h3>In the mailbox only</h3><p>${esc(b.note)} The ${esc(money(DATA.totalOut))} is every debit on ${esc(DATA.account)}, and this bill is not one of them.</p></aside>
+    <p class="foot">${DATA.gaps.map(esc).join(" ")}</p>`;
+  detailEl.classList.add("show");
+  paintList();
+  detailEl.scrollTop = 0;
+}
+function renderHome() {
+  const parts = BUCKETS.map(([id, label, color]) => ({
+    id, label, color,
+    total: DATA.rows.filter(r => r.bucket === id).reduce((s, r) => s + r.total, 0)
+  })).filter(p => p.total > 0);
+  const sum = parts.reduce((s, p) => s + p.total, 0) || 1;
+  const bar = `<div class="bar">${parts.map(p => `<i style="width:${(p.total / sum * 100).toFixed(3)}%;background:${p.color}" title="${esc(p.label + " " + money(p.total))}"></i>`).join("")}</div>`;
+  const bucks = `<ul class="bucks">${parts.map(p => `<li><button type="button" class="buck" data-bucket="${p.id}"><i class="sw" style="background:${p.color}"></i><span>${esc(p.label)}</span><em>${money(p.total)}</em></button></li>`).join("")}</ul>`;
+  const top = DATA.rows.slice(0, 6).map(r => `<button type="button" class="mini" data-id="${esc(r.id)}"><span><span class="mini-name">${esc(r.name)}</span><small>${esc(r.tag)} · ${esc(r.sentence)}</small></span><span class="amt">${money(r.total)}</span></button>`).join("");
+  const pooja = DATA.rows.find(r => r.id === "pooja-talwar");
+  const kg = DATA.rows.find(r => r.id === "kg-sharma-co");
+  function feat(r, extra) {
+    if (!r) return "";
+    return `<button type="button" class="feat" data-id="${esc(r.id)}"><p class="kicker">${esc(r.tag)}</p><h3>${esc(r.name)}</h3><p>${extra}</p><p class="big">${money(r.total)} all paid</p></button>`;
+  }
+  const poojaExtra = pooja ? `${pooja.n} payments, all from ${esc(pooja.accounts[0].short)}${banksOf(pooja).length === 1 ? ", to " + esc(banksOf(pooja)[0][0]) : ""}.` : "";
+  const kgExtra = kg ? `Last year ${money((kg.fy["2025-26"] || {}).total || 0)} · this year ${money((kg.fy["2026-27"] || {}).total || 0)}.${kg.invoice ? " Invoice " + money(kg.invoice.total) + " is not a debit yet." : ""}` : "";
+  viewEl.innerHTML = `
+    <button type="button" class="back" id="back">Back to the list</button>
+    <p class="eyebrow">Overview</p>
+    <h2>Where the money went</h2>
+    <p class="lead">${money(DATA.totalOut)} left ${esc(DATA.account)} from ${esc(DATA.period)}. Every debit is on exactly one name.</p>
+    ${bar}
+    ${bucks}
+    <p class="hint">Choose a group to filter the list. The groups add up to the total.</p>
+    <h3 class="block">Open a name</h3>
+    <div class="feats">
+      ${feat(pooja, poojaExtra)}
+      ${feat(kg, kgExtra)}
+    </div>
+    <h3 class="block">Largest</h3>
+    <div class="toplist">${top}</div>
+    <h3 class="block">What this does not pretend</h3>
+    <p class="quiet">Nobody was paid on a steady 3-month cycle. One payment in a year is not proof of a yearly bill.</p>
+    <ul class="gaps">${DATA.gaps.map(g => `<li>${esc(g)}</li>`).join("")}</ul>`;
+}
+function openId(id) {
+  const email = emails().find(x => x.id === id);
+  if (email) {
+    tab = "bills"; chip = "all"; focusBucket = null; qEl.value = "";
+    showEmail(email);
+    return;
+  }
+  const r = DATA.rows.find(x => x.id === id);
+  if (!r) { goHome(); return; }
+  qEl.value = "";
+  chip = "all";
+  focusBucket = null;
+  if (r.bucket === "internal") tab = "moved";
+  else if (!(tab === "bills" && (BILLS.has(r.name) || r.invoice)) && !(tab === "vendors" && (r.bucket === "vendor" || r.bucket === "tax")) && !(tab === "payees" && ["team","family","other","cash"].includes(r.bucket))) {
+    if (r.bucket === "vendor" || r.bucket === "tax") tab = "vendors";
+    else tab = "payees";
+  }
+  showDetail(r);
+}
+function goHome() {
+  selected = null;
+  history.replaceState(null, "", location.pathname);
+  renderHome();
+  detailEl.classList.add("show");
+  paintList();
+  if (window.innerWidth > 860) detailEl.scrollTop = 0;
+}
+function closeMobile() {
+  selected = null;
+  history.replaceState(null, "", location.pathname);
+  detailEl.classList.remove("show");
+  paintList();
+  if (window.innerWidth > 860) renderHome();
+}
+document.body.addEventListener("click", e => {
+  const tabBtn = e.target.closest("[data-tab]");
+  if (tabBtn) { tab = tabBtn.dataset.tab; chip = "all"; focusBucket = null; paintList(); listEl.scrollTop = 0; return; }
+  const chipBtn = e.target.closest("[data-chip]");
+  if (chipBtn) { chip = chipBtn.dataset.chip; paintList(); listEl.scrollTop = 0; return; }
+  if (e.target.closest("[data-clear]")) { focusBucket = null; paintList(); return; }
+  const buck = e.target.closest("[data-bucket]");
+  if (buck) {
+    const b = buck.dataset.bucket;
+    if (b === "internal") { tab = "moved"; focusBucket = null; }
+    else if (b === "vendor" || b === "tax") { tab = "vendors"; focusBucket = b; }
+    else { tab = "payees"; focusBucket = b; }
+    chip = "all"; qEl.value = "";
+    paintList(); listEl.scrollTop = 0;
+    return;
+  }
+  const idBtn = e.target.closest("[data-id]");
+  if (idBtn) { openId(idBtn.dataset.id); return; }
+  if (e.target.closest("#back")) { closeMobile(); return; }
+});
+document.getElementById("homebtn").addEventListener("click", goHome);
+document.getElementById("cadence").addEventListener("change", e => {
+  chip = e.target.value;
+  paintList();
+  listEl.scrollTop = 0;
+});
+qEl.addEventListener("input", () => { paintList(); listEl.scrollTop = 0; });
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (qEl.value) { qEl.value = ""; paintList(); return; }
+  if (window.innerWidth <= 860 && detailEl.classList.contains("show")) closeMobile();
+  else if (selected) goHome();
+});
+paintList();
+if (location.hash) openId(decodeURIComponent(location.hash.slice(1)));
+else if (window.innerWidth > 860) renderHome();
 </script>
 </body>
 </html>
