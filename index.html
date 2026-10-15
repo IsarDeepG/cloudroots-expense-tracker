@@ -2,116 +2,189 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CloudRoots Expense Tracker · Apr 2025 – Now</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CloudRoots outflows · who, how often</title>
 <style>
-body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: #f5f7fa; color: #1a1a2e; }
-header { background: #0f3460; color: white; padding: 1.5rem 2rem; }
-h1 { margin: 0; font-size: 1.8rem; }
-.container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-.card { background: white; border-radius: 12px; padding: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.card h3 { margin: 0 0 0.5rem; font-size: 0.85rem; color: #666; text-transform: uppercase; }
-.card .value { font-size: 1.6rem; font-weight: 700; color: #0f3460; }
-.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
-.chart-box { background: white; border-radius: 12px; padding: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-th { background: #0f3460; color: white; }
-tr:hover { background: #f0f4ff; }
-.note { background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; border-radius: 8px; margin-top: 2rem; }
-@media (max-width: 800px) { .charts { grid-template-columns: 1fr; } }
+  :root {
+    --ink: #1c1915;
+    --muted: #5c564c;
+    --line: #e4ddd0;
+    --paper: #f6f1e8;
+    --card: #fffdf8;
+    --rust: #9a3412;
+    --rust-soft: #f3e6dc;
+    --pine: #1f4d3a;
+    --pine-soft: #e5f0ea;
+    --navy: #1e3344;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif; background: var(--paper); color: var(--ink); }
+  header { background: var(--navy); color: #f6f1e8; padding: 1.6rem 1.4rem 1.3rem; }
+  header h1 { margin: 0; font-size: 1.7rem; font-weight: 600; letter-spacing: -0.02em; }
+  header p { margin: 0.35rem 0 0; opacity: 0.85; font-family: system-ui, sans-serif; font-size: 0.92rem; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 1.2rem 1rem 3rem; }
+  .howto { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 0.9rem 1rem; font-family: system-ui, sans-serif; font-size: 0.92rem; line-height: 1.45; }
+  .howto strong { font-weight: 650; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 0.6rem; margin: 0.9rem 0 1rem; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0.75rem 0.8rem; }
+  .card .k { font-family: system-ui, sans-serif; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+  .card .v { font-size: 1.25rem; margin-top: 0.15rem; }
+  .tabs { display: flex; gap: 0.4rem; margin: 0.4rem 0 0.8rem; flex-wrap: wrap; }
+  .tabs button { font-family: system-ui, sans-serif; border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 0.45rem 0.9rem; cursor: pointer; color: var(--ink); }
+  .tabs button.on { background: var(--navy); color: #f6f1e8; border-color: var(--navy); }
+  .tools { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.8rem; }
+  input[type=search] { flex: 1; font-family: system-ui, sans-serif; font-size: 1rem; padding: 0.55rem 0.75rem; border-radius: 10px; border: 1px solid var(--line); background: var(--card); }
+  h2 { font-size: 1.15rem; margin: 1.2rem 0 0.35rem; }
+  .sub { font-family: system-ui, sans-serif; color: var(--muted); font-size: 0.88rem; margin: 0 0 0.6rem; }
+  .row { display: grid; grid-template-columns: 1fr auto; gap: 0.4rem 1rem; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0.75rem 0.85rem; margin-bottom: 0.45rem; }
+  .name { font-size: 1.05rem; }
+  .tag { font-family: system-ui, sans-serif; font-size: 0.72rem; border-radius: 999px; padding: 0.1rem 0.45rem; margin-left: 0.35rem; background: var(--rust-soft); color: var(--rust); vertical-align: 2px; }
+  .tag.team { background: #e7eef8; color: #1e3a5f; }
+  .tag.family { background: #f3e8f5; color: #6b2d6b; }
+  .sent { font-family: system-ui, sans-serif; font-size: 0.92rem; margin-top: 0.15rem; }
+  .meta { font-family: system-ui, sans-serif; font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
+  .amt { font-size: 1.05rem; text-align: right; white-space: nowrap; }
+  .dots, .dotrow { display: flex; gap: 3px; }
+  .dots i { width: 22px; height: 14px; border-radius: 3px; background: #efe8dc; display: block; }
+  .dots i.on { background: var(--rust); }
+  .dotrow span { font-family: system-ui, sans-serif; font-size: 0.58rem; color: var(--muted); width: 22px; text-align: center; }
+  .empty { font-family: system-ui, sans-serif; background: var(--pine-soft); color: var(--pine); border-radius: 12px; padding: 0.8rem 0.9rem; }
+  .bar { height: 6px; background: #efe8dc; border-radius: 99px; margin-top: 0.4rem; overflow: hidden; }
+  .bar b { display: block; height: 100%; background: var(--rust); }
+  .note { font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--muted); margin-top: 1.2rem; }
+  @media (max-width: 640px) { .amt { text-align: left; } .row { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 <header>
-  <h1>CloudRoots Expense Tracker</h1>
-  <p style="margin:0.5rem 0 0; opacity:0.9;">1 April 2025 – 14 October 2026 · All accounts from email statements</p>
+  <h1>Who the money went to</h1>
+  <p id="subhead"></p>
 </header>
-<div class="container">
-  <div class="cards">
-    <div class="card"><h3>Axis CA opening (1 Apr 2025)</h3><div class="value">₹2.94L</div></div>
-    <div class="card"><h3>Axis CA FY credits</h3><div class="value">₹93.11L</div></div>
-    <div class="card"><h3>Axis CA FY debits</h3><div class="value">₹90.03L</div></div>
-    <div class="card"><h3>Axis CA closing (31 Mar 2026)</h3><div class="value">₹6.01L</div></div>
+<div class="wrap">
+  <div class="howto">
+    A useful tracker separates three things. <strong>Vendor</strong> is the company. <strong>Payee</strong> is the person the transfer was made to. <strong>Bill</strong> is a charge you should expect again.
+    Cadence comes from the months they were actually paid — not from the label on the bank line.
+    One payment in a 12-month statement is <em>once this year</em>. It is not yet proof of a yearly bill.
   </div>
-
-  <div class="charts">
-    <div class="chart-box"><canvas id="airtelChart"></canvas></div>
-    <div class="chart-box"><canvas id="scChart"></canvas></div>
+  <div class="cards" id="cards"></div>
+  <div class="tabs">
+    <button id="t-vendors" type="button">Vendors</button>
+    <button id="t-payees" class="on" type="button">Payees</button>
+    <button id="t-bills" type="button">Bills</button>
   </div>
-
-  <h2>Recurring bills & repeated payments</h2>
-  <table>
-    <thead><tr><th>Payee</th><th>Frequency</th><th>Typical amount</th><th>Notes</th></tr></thead>
-    <tbody>
-      <tr><td>Airtel Black</td><td>Monthly</td><td>₹3,700–3,900</td><td>Account 10101017262802</td></tr>
-      <tr><td>Slack (3 users)</td><td>Monthly</td><td>₹884</td><td>Workspace plan</td></tr>
-      <tr><td>DLF Jasola DTJ010</td><td>Monthly</td><td>₹10k–14k</td><td>Maintenance + electricity</td></tr>
-      <tr><td>Eleven Labs</td><td>Recurring</td><td>—</td><td>Receipts seen Oct 2026</td></tr>
-      <tr><td>IGL Gas</td><td>Recurring</td><td>—</td><td>BP 5000004664</td></tr>
-    </tbody>
-  </table>
-
-  <h2>Key tracked expenses (Airtel + SC)</h2>
-  <table>
-    <thead>
-      <tr><th>Month</th><th>Airtel Black</th><th>SC Account notes</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Apr 2025</td><td>₹3,682</td><td>SC eStatement available</td></tr>
-      <tr><td>May 2025</td><td>₹3,372</td><td>Deposit ₹74,800 (Makkajai); UPI out</td></tr>
-      <tr><td>Jun 2025</td><td>₹3,729</td><td>Large UPI transfers to self (~₹1.83L)</td></tr>
-      <tr><td>Jul 2025</td><td>₹3,704</td><td>UPI out ₹45,344</td></tr>
-      <tr><td>Aug 2025</td><td>₹3,723</td><td>SC eStatement available</td></tr>
-      <tr><td>Sep 2025</td><td>₹3,797</td><td>SC eStatement available</td></tr>
-      <tr><td>Oct 2025</td><td>₹3,834</td><td>SC eStatement available</td></tr>
-      <tr><td>Nov 2025</td><td>₹3,850</td><td>SC eStatement available</td></tr>
-      <tr><td>Dec 2025</td><td>₹3,844</td><td>SC eStatement available</td></tr>
-      <tr><td>Jan 2026</td><td>₹3,848</td><td>SC eStatement available</td></tr>
-      <tr><td>Feb 2026</td><td>₹3,836</td><td>SC eStatement available</td></tr>
-      <tr><td>Mar 2026</td><td>₹3,827</td><td>SC eStatement available</td></tr>
-      <tr><td>Apr 2026</td><td>₹3,525</td><td>SC eStatement available</td></tr>
-      <tr><td>May 2026</td><td>₹3,785</td><td>Account closed 12 May (final UPI ₹14)</td></tr>
-      <tr><td>Jun 2026</td><td>₹3,840</td><td>—</td></tr>
-      <tr><td>Jul 2026</td><td>₹3,840</td><td>—</td></tr>
-      <tr><td>Aug 2026</td><td>₹3,833</td><td>—</td></tr>
-      <tr><td>Sep 2026</td><td>₹3,848</td><td>—</td></tr>
-      <tr><td>Oct 2026</td><td>₹3,898</td><td>—</td></tr>
-    </tbody>
-  </table>
-
-  <div class="note">
-    <strong>Axis Bank company CA XX8760 (CloudRoots Infotech LLP) — full year extracted:</strong><br>
-    • Period: 1 Apr 2025 – 31 Mar 2026<br>
-    • Opening balance: ₹2,93,520.74<br>
-    • Total credits: ₹93,11,271.40<br>
-    • Total debits: ₹90,03,458.17<br>
-    • Closing balance: ₹6,01,333.97<br>
-    • Password confirmed: CLOU965334272<br>
-    Monthly statements for Apr–Sep 2026 also available and can be parsed the same way. Major inflows include Upwork Escrow / RDA payments; major outflows are team salaries (IFT/NEFT to Avishek, Sanjeev, Rohit, Kavita, Vanshika, etc.), DLF maintenance, cash withdrawals, and personal transfers.<br><br>
-    Other accounts (SBI password-protected, SC closed, Airtel, DTJ010) remain as previously noted.
-  </div>
+  <div class="tools"><input id="q" type="search" placeholder="Search a name"></div>
+  <div id="view"></div>
+  <p class="note" id="foot"></p>
 </div>
-
+<script id="data" type="application/json">{"period": "1 Apr 2025 – 31 Mar 2026", "account": "Axis current account XX8760 · CloudRoots Infotech LLP", "totalOut": 9003458.17, "opening": 293520.74, "credits": 9311271.4, "closing": 601333.97, "months": ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"], "rows": [{"name": "Lalimma (Axis)", "bucket": "family", "tag": "Family", "n": 11, "total": 930000.0, "typical": 100000.0, "usualMonth": 100000.0, "cadence": "most-months", "sentence": "About ₹1,00,000 in most months, not every month", "first": "Apr 2025", "last": "Mar 2026", "months": [100000.0, 100000.0, 100000.0, 0, 100000.0, 150000.0, 100000.0, 0, 160000.0, 0, 0, 120000.0], "bill": false}, {"name": "Studio Ezube", "bucket": "vendor", "tag": "Vendor", "n": 5, "total": 819000.0, "typical": 125000.0, "usualMonth": 200000.0, "cadence": "irregular", "sentence": "5 payments, no fixed cycle — usually ₹1,25,000 each", "first": "Nov 2025", "last": "Feb 2026", "months": [0, 0, 0, 0, 0, 0, 0, 165000.0, 200000.0, 0, 454000.0, 0], "bill": false}, {"name": "Avishek Tyagi", "bucket": "team", "tag": "Team", "n": 11, "total": 683457.0, "typical": 60480.0, "usualMonth": 60830.0, "cadence": "monthly", "sentence": "About ₹60,830 every month", "first": "Apr 2025", "last": "Mar 2026", "months": [51800.0, 0, 50400.0, 60480.0, 0, 120960.0, 61180.0, 67480.0, 79717.0, 60480.0, 70480.0, 60480.0], "bill": false}, {"name": "Branch transfer (no name)", "bucket": "internal", "tag": "No payee name", "n": 2, "total": 635260.0, "typical": 317630.0, "usualMonth": 317630.0, "cadence": "irregular", "sentence": "2 payments, no fixed cycle — usually ₹3,17,630 each", "first": "Apr 2025", "last": "May 2025", "months": [316380.0, 318880.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Joint Isar & Lalimma", "bucket": "family", "tag": "Family", "n": 11, "total": 590000.0, "typical": 45000.0, "usualMonth": 45000.0, "cadence": "monthly", "sentence": "About ₹45,000 every month", "first": "Apr 2025", "last": "Mar 2026", "months": [45000.0, 90000.0, 45000.0, 45000.0, 45000.0, 45000.0, 45000.0, 0, 90000.0, 0, 70000.0, 70000.0], "bill": false}, {"name": "Harinder Yadav", "bucket": "team", "tag": "Team", "n": 12, "total": 527430.0, "typical": 43550.0, "usualMonth": 44075.0, "cadence": "monthly", "sentence": "About ₹44,075 every month since May 2025", "first": "May 2025", "last": "Mar 2026", "months": [0, 43900.0, 43200.0, 43200.0, 0, 86400.0, 43200.0, 43900.0, 45340.0, 44250.0, 82200.0, 51840.0], "bill": false}, {"name": "Isar (own Axis)", "bucket": "family", "tag": "Own account", "n": 18, "total": 498585.17, "typical": 24500.0, "usualMonth": 43500.0, "cadence": "several-a-month", "sentence": "Several times a month — usually ₹24,500 each time", "first": "Apr 2025", "last": "Mar 2026", "months": [100000.0, 47000.0, 40000.0, 20000.0, 47340.0, 40000.0, 39416.0, 0, 13000.0, 76119.0, 0, 75710.17], "bill": false}, {"name": "Sanjeev Yadav", "bucket": "team", "tag": "Team", "n": 12, "total": 479510.0, "typical": 41140.0, "usualMonth": 41490.0, "cadence": "monthly", "sentence": "About ₹41,490 every month", "first": "Apr 2025", "last": "Mar 2026", "months": [41840.0, 0, 41140.0, 41140.0, 0, 82280.0, 41840.0, 41140.0, 41140.0, 41140.0, 56425.0, 51425.0], "bill": false}, {"name": "Rohit Sahay", "bucket": "team", "tag": "Team", "n": 11, "total": 409040.0, "typical": 36800.0, "usualMonth": 37150.0, "cadence": "monthly", "sentence": "About ₹37,150 every month since May 2025", "first": "May 2025", "last": "Mar 2026", "months": [0, 33400.0, 32000.0, 36800.0, 0, 73600.0, 37500.0, 36800.0, 37500.0, 36800.0, 42320.0, 42320.0], "bill": false}, {"name": "Ravi Kumar", "bucket": "team", "tag": "Team", "n": 13, "total": 351102.0, "typical": 30000.0, "usualMonth": 30000.0, "cadence": "monthly", "sentence": "About ₹30,000 every month since May 2025", "first": "May 2025", "last": "Mar 2026", "months": [0, 50700.0, 30000.0, 30000.0, 0, 30000.0, 60000.0, 30000.0, 30402.0, 30000.0, 30000.0, 30000.0], "bill": false}, {"name": "CBDT (income tax)", "bucket": "tax", "tag": "Tax", "n": 22, "total": 348786.0, "typical": 5000.0, "usualMonth": 30000.0, "cadence": "several-a-month", "sentence": "Several times a month — usually ₹5,000 each time", "first": "May 2025", "last": "Mar 2026", "months": [0, 13180.0, 35000.0, 38500.0, 16460.0, 117450.0, 25000.0, 15000.0, 0, 0, 0, 88196.0], "bill": true}, {"name": "Vanshika Sethi", "bucket": "team", "tag": "Team", "n": 12, "total": 284500.0, "typical": 23750.0, "usualMonth": 27000.0, "cadence": "monthly", "sentence": "About ₹27,000 every month since May 2025", "first": "May 2025", "last": "Mar 2026", "months": [0, 36000.0, 18000.0, 20500.0, 0, 36000.0, 36000.0, 27000.0, 27000.0, 27000.0, 30000.0, 27000.0], "bill": false}, {"name": "Kishan Kumar", "bucket": "team", "tag": "Team", "n": 7, "total": 231018.0, "typical": 38532.0, "usualMonth": 36266.0, "cadence": "monthly-stopped", "sentence": "About ₹36,266 most months, then stopped after Dec 2025", "first": "Apr 2025", "last": "Dec 2025", "months": [34000.0, 34000.0, 41000.0, 38532.0, 0, 77064.0, 0, 0, 6422.0, 0, 0, 0], "bill": false}, {"name": "Cash · S C G", "bucket": "cash", "tag": "Cash", "n": 4, "total": 200000.0, "typical": 50000.0, "usualMonth": 100000.0, "cadence": "irregular", "sentence": "4 payments, no fixed cycle — usually ₹50,000 each", "first": "Oct 2025", "last": "Nov 2025", "months": [0, 0, 0, 0, 0, 0, 50000.0, 150000.0, 0, 0, 0, 0], "bill": false}, {"name": "Pooja Talwar", "bucket": "team", "tag": "Team", "n": 4, "total": 186000.0, "typical": 46500.0, "usualMonth": 45000.0, "cadence": "irregular", "sentence": "4 payments, no fixed cycle — usually ₹46,500 each", "first": "May 2025", "last": "Nov 2025", "months": [0, 45000.0, 45000.0, 0, 0, 0, 0, 96000.0, 0, 0, 0, 0], "bill": false}, {"name": "DLF Tower B", "bucket": "vendor", "tag": "Office", "n": 12, "total": 167996.0, "typical": 14018.0, "usualMonth": 14055.0, "cadence": "monthly", "sentence": "About ₹14,055 every month", "first": "Apr 2025", "last": "Mar 2026", "months": [13034.0, 14291.0, 14469.0, 14450.0, 13981.0, 13943.0, 14055.0, 14110.0, 13966.0, 13708.0, 0, 27989.0], "bill": true}, {"name": "Cash · unspecified", "bucket": "cash", "tag": "Cash", "n": 4, "total": 150000.0, "typical": 42500.0, "usualMonth": 50000.0, "cadence": "irregular", "sentence": "4 payments, no fixed cycle — usually ₹42,500 each", "first": "Jul 2025", "last": "Mar 2026", "months": [0, 0, 0, 50000.0, 0, 0, 0, 0, 0, 50000.0, 0, 50000.0], "bill": false}, {"name": "Akash Solanki", "bucket": "team", "tag": "Team", "n": 3, "total": 146337.0, "typical": 50940.0, "usualMonth": 50940.0, "cadence": "every-2-months", "sentence": "About ₹50,940 every 2 months, then stopped after Aug 2025", "first": "Apr 2025", "last": "Aug 2025", "months": [50940.0, 0, 50940.0, 0, 44457.0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Unnamed transfer", "bucket": "internal", "tag": "No payee name", "n": 7, "total": 145414.0, "typical": 10000.0, "usualMonth": 145414.0, "cadence": "cluster", "sentence": "₹1,45,414 across 7 payments, all in Jan 2026", "first": "Jan 2026", "last": "Jan 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 145414.0, 0, 0], "bill": false}, {"name": "Snehal Tyagi", "bucket": "team", "tag": "Team", "n": 7, "total": 117200.0, "typical": 18000.0, "usualMonth": 18000.0, "cadence": "monthly", "sentence": "About ₹18,000 every month since Sep 2025", "first": "Sep 2025", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 14500.0, 15700.0, 15000.0, 18000.0, 18000.0, 18000.0, 18000.0], "bill": false}, {"name": "Sumit Singh", "bucket": "team", "tag": "Team", "n": 7, "total": 117200.0, "typical": 17420.0, "usualMonth": 17420.0, "cadence": "monthly", "sentence": "About ₹17,420 every month since Sep 2025", "first": "Sep 2025", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 14500.0, 15700.0, 15000.0, 17420.0, 18580.0, 18000.0, 18000.0], "bill": false}, {"name": "KG Sharma & Co", "bucket": "vendor", "tag": "Professional", "n": 1, "total": 108000.0, "typical": 108000.0, "usualMonth": 108000.0, "cadence": "once", "sentence": "₹1,08,000 once in this year (Dec 2025)", "first": "Dec 2025", "last": "Dec 2025", "months": [0, 0, 0, 0, 0, 0, 0, 0, 108000.0, 0, 0, 0], "bill": true}, {"name": "Cash · Subha", "bucket": "cash", "tag": "Cash", "n": 2, "total": 100000.0, "typical": 50000.0, "usualMonth": 100000.0, "cadence": "cluster", "sentence": "₹1,00,000 across 2 payments, all in Sep 2025", "first": "Sep 2025", "last": "Sep 2025", "months": [0, 0, 0, 0, 0, 100000.0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Annu Agrawal", "bucket": "team", "tag": "Team", "n": 6, "total": 95700.0, "typical": 15850.0, "usualMonth": 32000.0, "cadence": "irregular", "sentence": "6 payments, no fixed cycle — usually ₹15,850 each", "first": "Apr 2025", "last": "Jul 2025", "months": [32000.0, 33000.0, 0, 30700.0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Interloop", "bucket": "vendor", "tag": "Vendor", "n": 5, "total": 75391.0, "typical": 17280.0, "usualMonth": 19183.0, "cadence": "irregular", "sentence": "5 payments, no fixed cycle — usually ₹17,280 each", "first": "Dec 2025", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 53810.0, 2398.0, 0, 19183.0], "bill": false}, {"name": "Kavita Shahu", "bucket": "team", "tag": "Team", "n": 2, "total": 71700.0, "typical": 35850.0, "usualMonth": 35850.0, "cadence": "irregular", "sentence": "2 payments, no fixed cycle — usually ₹35,850 each", "first": "Apr 2025", "last": "Jun 2025", "months": [35100.0, 0, 36600.0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Idrish", "bucket": "other", "tag": "Other person", "n": 1, "total": 70000.0, "typical": 70000.0, "usualMonth": 70000.0, "cadence": "once", "sentence": "₹70,000 once in this year (Dec 2025)", "first": "Dec 2025", "last": "Dec 2025", "months": [0, 0, 0, 0, 0, 0, 0, 0, 70000.0, 0, 0, 0], "bill": false}, {"name": "Cash · Subhas", "bucket": "cash", "tag": "Cash", "n": 1, "total": 50000.0, "typical": 50000.0, "usualMonth": 50000.0, "cadence": "once", "sentence": "₹50,000 once in this year (Apr 2025)", "first": "Apr 2025", "last": "Apr 2025", "months": [50000.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Cash · S G G", "bucket": "cash", "tag": "Cash", "n": 1, "total": 50000.0, "typical": 50000.0, "usualMonth": 50000.0, "cadence": "once", "sentence": "₹50,000 once in this year (Oct 2025)", "first": "Oct 2025", "last": "Oct 2025", "months": [0, 0, 0, 0, 0, 0, 50000.0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Municipal Corporation of Delhi", "bucket": "vendor", "tag": "Civic", "n": 1, "total": 48402.0, "typical": 48402.0, "usualMonth": 48402.0, "cadence": "once", "sentence": "₹48,402 once in this year (Sep 2025)", "first": "Sep 2025", "last": "Sep 2025", "months": [0, 0, 0, 0, 0, 48402.0, 0, 0, 0, 0, 0, 0], "bill": true}, {"name": "Lali Automobiles", "bucket": "vendor", "tag": "Vendor", "n": 1, "total": 38653.0, "typical": 38653.0, "usualMonth": 38653.0, "cadence": "once", "sentence": "₹38,653 once in this year (Jan 2026)", "first": "Jan 2026", "last": "Jan 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 38653.0, 0, 0], "bill": false}, {"name": "Dharamraj", "bucket": "team", "tag": "Team", "n": 2, "total": 36000.0, "typical": 18000.0, "usualMonth": 36000.0, "cadence": "cluster", "sentence": "₹36,000 across 2 payments, all in Mar 2026", "first": "Mar 2026", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36000.0], "bill": false}, {"name": "Ritika Jain", "bucket": "team", "tag": "Team", "n": 2, "total": 35500.0, "typical": 17750.0, "usualMonth": 35500.0, "cadence": "cluster", "sentence": "₹35,500 across 2 payments, all in Mar 2026", "first": "Mar 2026", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35500.0], "bill": false}, {"name": "Cash · Anita", "bucket": "cash", "tag": "Cash", "n": 1, "total": 35000.0, "typical": 35000.0, "usualMonth": 35000.0, "cadence": "once", "sentence": "₹35,000 once in this year (May 2025)", "first": "May 2025", "last": "May 2025", "months": [0, 35000.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "BTB Venture", "bucket": "vendor", "tag": "Vendor", "n": 1, "total": 34344.0, "typical": 34344.0, "usualMonth": 34344.0, "cadence": "once", "sentence": "₹34,344 once in this year (Apr 2025)", "first": "Apr 2025", "last": "Apr 2025", "months": [34344.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Shining Stars Consult", "bucket": "vendor", "tag": "Vendor", "n": 1, "total": 32387.0, "typical": 32387.0, "usualMonth": 32387.0, "cadence": "once", "sentence": "₹32,387 once in this year (Mar 2026)", "first": "Mar 2026", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32387.0], "bill": false}, {"name": "Kamal Singh Negi", "bucket": "other", "tag": "Other person", "n": 1, "total": 32000.0, "typical": 32000.0, "usualMonth": 32000.0, "cadence": "once", "sentence": "₹32,000 once in this year (Mar 2026)", "first": "Mar 2026", "last": "Mar 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32000.0], "bill": false}, {"name": "Priyanka Jain", "bucket": "other", "tag": "Other person", "n": 1, "total": 31500.0, "typical": 31500.0, "usualMonth": 31500.0, "cadence": "once", "sentence": "₹31,500 once in this year (Jun 2025)", "first": "Jun 2025", "last": "Jun 2025", "months": [0, 0, 31500.0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}, {"name": "Policybazaar", "bucket": "vendor", "tag": "Insurance", "n": 1, "total": 17419.0, "typical": 17419.0, "usualMonth": 17419.0, "cadence": "once", "sentence": "₹17,419 once in this year (Feb 2026)", "first": "Feb 2026", "last": "Feb 2026", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17419.0, 0], "bill": true}, {"name": "Zimyo Consulting", "bucket": "vendor", "tag": "Software", "n": 1, "total": 12960.0, "typical": 12960.0, "usualMonth": 12960.0, "cadence": "once", "sentence": "₹12,960 once in this year (May 2025)", "first": "May 2025", "last": "May 2025", "months": [0, 12960.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": true}, {"name": "Mushki Qamar", "bucket": "other", "tag": "Other person", "n": 1, "total": 10667.0, "typical": 10667.0, "usualMonth": 10667.0, "cadence": "once", "sentence": "₹10,667 once in this year (Apr 2025)", "first": "Apr 2025", "last": "Apr 2025", "months": [10667.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "bill": false}], "buckets": {"family": 2018585.17, "vendor": 1354552.0, "team": 3771694.0, "internal": 780674.0, "tax": 348786.0, "cash": 585000.0, "other": 144167.0}, "bills": {"DLF Tower B": {"kind": "Standing office bill", "when": "Every month", "note": "Maintenance and electricity for the Jasola office. One month (Feb) had no separate debit; Jan and Mar had two."}, "KG Sharma & Co": {"kind": "Professional fee", "when": "Once this year", "note": "Only one debit in these 12 months. Treat as possibly yearly until a second year shows up."}, "Policybazaar": {"kind": "Insurance", "when": "Once this year", "note": "One premium. Could be the annual policy, or a one-off. Not proven yearly yet."}, "Municipal Corporation of Delhi": {"kind": "Civic charge", "when": "Once this year", "note": "One payment. Often a yearly property or municipal charge, not confirmed."}, "Zimyo Consulting": {"kind": "HR software", "when": "Once this year", "note": "One invoice. Could be an annual plan or a single bill."}, "CBDT (income tax)": {"kind": "Tax", "when": "Several times a month", "note": "Advance tax and challans, not one calendar bill."}}, "emailBills": [{"name": "Airtel Black", "cadence": "Every month", "amount": "₹3,700–3,900", "note": "Bills in email Apr 2025–Oct 2026. Not a debit on this Axis account."}, {"name": "Slack (3 users)", "cadence": "Every month", "amount": "₹884", "note": "Workspace plan. Seen in email, not on this Axis account."}, {"name": "IGL Gas", "cadence": "Recurring", "amount": "Amount varies", "note": "BP 5000004664. Seen in email, not on this Axis account."}, {"name": "Eleven Labs", "cadence": "Recurring", "amount": "Amount varies", "note": "Receipts in email (Oct 2026). Not on this Axis account."}]}</script>
 <script>
-new Chart(document.getElementById('airtelChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Apr25','May25','Jun25','Jul25','Aug25','Sep25','Oct25','Nov25','Dec25','Jan26','Feb26','Mar26','Apr26','May26','Jun26','Jul26','Aug26','Sep26','Oct26'],
-    datasets: [{ label: 'Airtel Black (₹)', data: [3682,3372,3729,3704,3723,3797,3834,3850,3844,3848,3836,3827,3525,3785,3840,3840,3833,3848,3898], backgroundColor: '#0f3460' }]
-  },
-  options: { plugins: { title: { display: true, text: 'Airtel Black monthly bills (Apr 2025 – Oct 2026)' } }, scales: { y: { beginAtZero: true } } }
-});
+const DATA = JSON.parse(document.getElementById("data").textContent);
+const inr = n => "₹" + Math.round(n).toLocaleString("en-IN");
+const qel = document.getElementById("q");
+let tab = "payees";
 
-new Chart(document.getElementById('scChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['UPI / transfers out', 'Salary / BT in', 'Interest'],
-    datasets: [{ data: [228458, 119600, 379], backgroundColor: ['#e94560','#16a085','#533483'] }]
-  },
-  options: { plugins: { title: { display: true, text: 'SC Account cashflow (May 2025 – May 2026)' } } }
-});
+document.getElementById("subhead").textContent =
+  DATA.account + " · " + DATA.period + " · " + inr(DATA.totalOut) + " paid out";
+
+const order = ["team","family","vendor","tax","cash","internal","other"];
+const labels = {
+  team: "Team", family: "Family & own", vendor: "Vendors", tax: "Tax",
+  cash: "Cash", internal: "No name", other: "Other people"
+};
+document.getElementById("cards").innerHTML = order.map(k => `
+  <div class="card"><div class="k">${labels[k]}</div><div class="v">${inr(DATA.buckets[k]||0)}</div></div>
+`).join("") + `<div class="card"><div class="k">All outflows</div><div class="v">${inr(DATA.totalOut)}</div></div>`;
+
+function dots(months) {
+  const cells = months.map((v,i) => `<i class="${v?"on":""}" title="${DATA.months[i]} ${v?inr(v):"—"}"></i>`).join("");
+  const labs = DATA.months.map(m => `<span>${m}</span>`).join("");
+  return `<div class="dots" style="margin-top:0.45rem">${cells}</div><div class="dotrow">${labs}</div>`;
+}
+
+function rowHTML(r, max) {
+  const share = max ? Math.round(100 * r.total / max) : 0;
+  return `<article class="row">
+    <div>
+      <div class="name">${r.name}<span class="tag ${r.bucket}">${r.tag}</span></div>
+      <div class="sent">${r.sentence}</div>
+      <div class="meta">${r.n} payment${r.n==1?"":"s"} · ${r.first} to ${r.last}</div>
+      ${dots(r.months)}
+      ${max ? `<div class="bar"><b style="width:${Math.max(share,2)}%"></b></div>` : ""}
+    </div>
+    <div class="amt">${inr(r.total)}</div>
+  </article>`;
+}
+
+function match(r) {
+  const q = qel.value.trim().toLowerCase();
+  return !q || r.name.toLowerCase().includes(q) || r.tag.toLowerCase().includes(q) || r.sentence.toLowerCase().includes(q);
+}
+
+function section(title, blurb, list, max) {
+  if (!list.length) {
+    return `<h2>${title}</h2><p class="empty">${blurb}</p>`;
+  }
+  return `<h2>${title}</h2><p class="sub">${blurb}</p>` + list.map(r => rowHTML(r, max)).join("");
+}
+
+function render() {
+  const rows = DATA.rows.filter(match);
+  const view = document.getElementById("view");
+  if (tab === "vendors") {
+    const vendors = rows.filter(r => r.bucket === "vendor" || r.bucket === "tax");
+    const rest = rows.filter(r => r.bucket === "internal");
+    const max = Math.max(...DATA.rows.filter(r => r.bucket==="vendor"||r.bucket==="tax").map(r=>r.total), 1);
+    view.innerHTML =
+      section("Companies", "Sorted by what left the account. The bar is their share of the biggest vendor.", vendors, max)
+      + section("Left the account with no company and no person", "These debits have no payee name on the statement, so they are not a vendor.", rest, null);
+  } else if (tab === "payees") {
+    const people = rows.filter(r => ["team","family","other","cash"].includes(r.bucket));
+    const by = code => people.filter(r => r.cadence === code);
+    view.innerHTML =
+      section("Every month", "Paid in nearly every month of the run.", by("monthly"), null)
+      + section("Most months, not every month", "A regular amount, with months skipped.", by("most-months"), null)
+      + section("Every 2 months", "Payments land about every second month.", by("every-2-months"), null)
+      + section("Every 3 months", "Nobody on this account was paid on a steady 3-month cycle in this year.", by("every-3-months"), null)
+      + section("Once this year", "A single payment. It may be a yearly bill, or it may never happen again. One year is not enough to tell.", by("once"), null)
+      + section("Several times a month", "More than one debit in a typical month.", by("several-a-month"), null)
+      + section("Was regular, then stopped", "A monthly pattern that ended before March 2026.", by("monthly-stopped"), null)
+      + section("A cluster, not a cycle", "More than one payment, but all inside a single month.", by("cluster"), null)
+      + section("No fixed cycle", "Repeated, but not monthly, quarterly, or yearly.", by("irregular"), null);
+  } else {
+    const billNames = Object.keys(DATA.bills);
+    const standing = rows.filter(r => DATA.bills[r.name] && DATA.bills[r.name].when === "Every month");
+    const maybeYear = rows.filter(r => DATA.bills[r.name] && DATA.bills[r.name].when === "Once this year");
+    const tax = rows.filter(r => DATA.bills[r.name] && DATA.bills[r.name].when.startsWith("Several"));
+    const notes = (list) => list.map(r => {
+      const b = DATA.bills[r.name];
+      return rowHTML({...r, sentence: r.sentence + " — " + b.note, tag: b.kind}, null);
+    }).join("");
+    const email = DATA.emailBills.filter(b => {
+      const q = qel.value.trim().toLowerCase();
+      return !q || b.name.toLowerCase().includes(q);
+    }).map(b => `<article class="row"><div><div class="name">${b.name}<span class="tag">Email only</span></div><div class="sent">${b.cadence} · ${b.amount}</div><div class="meta">${b.note}</div></div><div class="amt">${b.amount}</div></article>`).join("");
+    view.innerHTML =
+      `<h2>Every month</h2><p class="sub">A bill that actually posted every month on this account.</p>${notes(standing) || '<p class="empty">None.</p>'}
+       <h2>Once this year — possibly a yearly bill</h2><p class="sub">Only one charge in the statement. Do not budget them as yearly until next year repeats.</p>${notes(maybeYear)}
+       <h2>Tax, not a calendar bill</h2>${notes(tax)}
+       <h2>Bills in email, not on this Axis account</h2><p class="sub">These keep arriving by email. They were not debited from XX8760 in this statement.</p>${email || '<p class="empty">None match.</p>'}`;
+  }
+}
+
+document.getElementById("t-vendors").onclick = () => { tab="vendors"; paint(); };
+document.getElementById("t-payees").onclick = () => { tab="payees"; paint(); };
+document.getElementById("t-bills").onclick = () => { tab="bills"; paint(); };
+qel.oninput = render;
+function paint() {
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("on"));
+  document.getElementById("t-"+tab).classList.add("on");
+  render();
+}
+document.getElementById("foot").textContent =
+  "Source: Axis e-statement for XX8760, 1 Apr 2025 to 31 Mar 2026. Opening " + inr(DATA.opening) +
+  ", credits " + inr(DATA.credits) + ", debits " + inr(DATA.totalOut) + ", closing " + inr(DATA.closing) +
+  ". April 2026 onward is not in this statement. SBI is still locked. Squares are months Apr 2025 through Mar 2026; a filled square means money went out that month.";
+paint();
 </script>
 </body>
 </html>
