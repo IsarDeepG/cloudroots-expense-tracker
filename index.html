@@ -445,6 +445,11 @@ function grouped(rows) {
   }
   return html || `<p class="empty">Nothing in this group.</p>`;
 }
+function mostlyOnce(rows) {
+  if (!rows.length) return false;
+  const onceN = rows.filter(r => r.cadence === "once").length;
+  return onceN >= 20 || onceN / rows.length >= 0.5;
+}
 function byCadence(rows) {
   const shown = rows.filter(r => chip === "all" || r.cadence === chip);
   if (!shown.length) {
@@ -452,24 +457,33 @@ function byCadence(rows) {
       ? `<p class="empty">Nobody was paid on a steady 3-month cycle.</p>`
       : `<p class="empty">Nothing in this group.</p>`;
   }
+  // A pile of one-off shops is not a rhythm. List those by amount.
+  if (chip === "all" && mostlyOnce(shown)) return shown.map(rowBtn).join("");
   if (chip !== "all") return shown.map(rowBtn).join("");
   let html = "";
+  const singles = [];
   for (const [id, label] of CADENCE) {
     const group = shown.filter(r => r.cadence === id);
     if (!group.length) continue;
+    if (id === "once") { singles.push.apply(singles, group); continue; }
     const total = group.reduce((s, r) => s + shownTotal(r), 0);
     html += `<div class="group"><span>${esc(label)} · ${group.length}</span><b>${money(total)}</b></div>` + group.map(rowBtn).join("");
   }
+  if (singles.length) html += singles.map(rowBtn).join("");
   return html;
 }
 function paintChips() {
   const sel = document.getElementById("cadence");
-  if (qEl.value.trim() || (tab !== "payees" && catFilter === "all")) { sel.hidden = true; return; }
-  sel.hidden = false;
   const rows = pool();
+  if (qEl.value.trim() || (tab !== "payees" && catFilter === "all") || mostlyOnce(rows)) {
+    sel.hidden = true;
+    if (chip === "once") chip = "all";
+    return;
+  }
+  sel.hidden = false;
   const counts = {};
   rows.forEach(r => { counts[r.cadence] = (counts[r.cadence] || 0) + 1; });
-  const items = [["all", "All rhythms"]].concat(CADENCE.filter(([id]) => counts[id]));
+  const items = [["all", "All rhythms"]].concat(CADENCE.filter(([id]) => id !== "once" && counts[id]));
   const html = items.map(([id, label]) => `<option value="${id}">${esc(label)}${id === "all" ? "" : " · " + counts[id]}</option>`).join("");
   if (sel.dataset.sig !== html) { sel.dataset.sig = html; sel.innerHTML = html; }
   if (sel.value !== chip) sel.value = chip;
